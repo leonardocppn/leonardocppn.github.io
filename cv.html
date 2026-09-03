@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,19 +25,67 @@
             font-style: normal;
         }
 
-        @media (min-width: 1200px) {
-            .container {
-                max-width: 1100px;
-            }
+        .align-items-center {
+            align-items: center !important;
         }
 
-        .align-items-center {
-        align-items: center !important;
+        .cv-name {
+            font-family: 'Faustina', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+        .cv-contact {
+            color: #555;
+            margin-bottom: 1.8rem;
+        }
+        .cv-contact span {
+            margin-right: 1.3rem;
+            display: inline-block;
+        }
+        .cv-section {
+            margin-top: 1.8rem;
+        }
+        .cv-section h2 {
+            font-family: 'Faustina', serif;
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            border-bottom: 1px solid #000;
+            padding-bottom: 0.25rem;
+            margin-bottom: 0.9rem;
+        }
+        .cv-entry {
+            display: grid;
+            grid-template-columns: 135px 1fr;
+            gap: 0.5rem 1.2rem;
+            margin-bottom: 1rem;
+        }
+        .cv-when {
+            color: #666;
+            font-style: italic;
+        }
+        .cv-what strong {
+            font-weight: 600;
+        }
+        .cv-what .role {
+            color: #333;
+        }
+        .cv-what p {
+            margin: 0.3rem 0 0;
+        }
+        @media (max-width: 600px) {
+            .cv-entry {
+                grid-template-columns: 1fr;
+                gap: 0.15rem;
+            }
         }
     </style>
-    <title>Leonardo Coppini</title>
+    <title>Leonardo Coppini &mdash; CV</title>
 </head>
 <body>
+
     <header class="navbar navbar-static-top bs-docs-nav site-header" id="top">
         <div class="header-flat-line" aria-hidden="true"></div>
         <span class="psi-mark">&#10216; &#955;|&#947; &#10217;</span>
@@ -48,22 +96,162 @@
             </span>
         <a href="https://leonardocoppini.com" class="navbar-brand" style="font-weight: bold; margin-bottom: -3px; padding-bottom: 0;">Leonardo Coppini</a>
     </header>
-    <div class="container d-flex align-items-center" style="min-height: calc(100vh - 150px);">
-        <div class="row justify-content-center align-items-center mx-auto">
-            <div class="container container-post" style="min-height: calc(100vh - 150px);">
-                <div class="row justify-content-center">
-                    <div class="col-12" style="font-size: 0.9rem;">
-                    <br><br>
-                        <img src="assets/mememe.jpg" alt="Stemma" class="img-fluid" style="border: 1px solid #555; max-width: 500px; width: 100%;">
-                        <br><br>
-                        Hi, I'm a physicist and a tech enthusiast.<br>
-                        <br>
-                        You can find my <a href="cv.html">CV</a> here, or connect with me on <a href="https://www.linkedin.com/in/leonardocoppini/">LinkedIn</a>.<br>
-                        See my personal projects <a href="https://leonardocppn.github.io/portfolio/">here</a>.<br>
-                        <br>
-                        If you've got any questions, feel free to <a href="https://forms.gle/BovGbMtHWUiPvwBo6">email</a> me.
+
+    <div class="container" style="margin-top:30px;">
+        <div class="row justify-content-center">
+            <div class="col-12" style="font-size: 0.9rem; max-width: 800px; margin: 0 auto;">
+            <p style="font-size: 0.9em; text-align:right;"><a style="color: #666; text-decoration: none; margin-bottom:5px;" href="index.html">&larr; Back</a></p>
+
+                <div class="cv-name">Leonardo Coppini</div>
+                <div class="cv-contact">
+                    <span>01/03/1996, Florence, IT</span>
+                    <span><a href="https://www.linkedin.com/in/leonardocoppini/">LinkedIn</a></span>
+                    <span><a href="https://leonardocppn.github.io/portfolio">GitHub</a></span>
+                </div>
+
+                <div class="cv-section">
+                    <p>AI/LLM developer focused on building practical tools on top of large language models: an MCP server for LLM-driven email workflows and a RAG pipeline for querying PDF archives in natural language, both open source, the latter built on the Claude API. Ability to analyse and communicate complex technical material clearly, developed through ten years of physics and evidenced by an upcoming publication with Pisa University Press. Solid analytical background in statistical data analysis and quantitative reasoning (Python, NumPy, SciPy, Pandas).</p>
+                </div>
+
+                <div class="cv-section">
+                    <h2>Education</h2>
+                    <div class="cv-entry">
+                        <div class="cv-when">2015&ndash;2025</div>
+                        <div class="cv-what">
+                            <strong>University of Pisa</strong> &mdash; Bachelor's Degree in Physics<br>
+                            Thesis: <em>The intuition that led to Heisenberg's Matrix Mechanics</em><br>
+                            Final grade: 88/110. Date of graduation: 19/06/2025.
+                        </div>
+                    </div>
+                    <div class="cv-entry">
+                        <div class="cv-when">2010&ndash;2015</div>
+                        <div class="cv-what">
+                            <strong>ITIS Antonio Meucci</strong>, Florence (FI) &mdash; Technical High School Diploma<br>
+                            Senior Industrial Technician, specialization in Computer Science<br>
+                            Final grade: 87/100
+                        </div>
                     </div>
                 </div>
+
+                <div class="cv-section">
+                    <h2>IT Skills</h2>
+                    <div class="cv-entry">
+                        <div class="cv-when">AI &amp; LLM tooling</div>
+                        <div class="cv-what">
+                            <strong>APIs &amp; frameworks:</strong> Anthropic Claude API, OpenAI API, MCP (Model Context Protocol)<br>
+                            <strong>RAG &amp; retrieval:</strong> Sentence-transformers, ChromaDB, BM25, cross-encoder re-ranking
+                        </div>
+                    </div>
+                    <div class="cv-entry">
+                        <div class="cv-when">Programming</div>
+                        <div class="cv-what">
+                            <strong>Proficient:</strong> Python, SQL, HTML/CSS<br>
+                            <strong>Intermediate:</strong> C, C++, JavaScript, Cloudflare Workers<br>
+                            <strong>Familiar:</strong> C#, Java
+                        </div>
+                    </div>
+                    <div class="cv-entry">
+                        <div class="cv-when">Data Analysis &amp; Statistics</div>
+                        <div class="cv-what">
+                            <strong>Python libraries:</strong> NumPy, SciPy, Matplotlib, Pandas<br>
+                            <strong>Statistical skills:</strong> Statistical analysis of experimental data, model fitting, error propagation, goodness-of-fit tests, data visualization
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cv-section">
+                    <h2>Projects</h2>
+                    <div class="cv-entry">
+                        <div class="cv-when">2026<br>Personal project</div>
+                        <div class="cv-what">
+                            <strong>med-rag</strong> &mdash; RAG pipeline for querying PDF medical archives in natural language.
+                            <p>Adaptive layout parser derives all parameters from each document's own metrics, with no hardcoded thresholds, handling structured lab reports (multi-column, tables) and narrative clinical notes separately. Dual LLM backend (Claude API / Ollama), semantic retrieval via sentence-transformers + ChromaDB, with optional cross-encoder re-ranking and BM25 keyword search.</p>
+                            <p>Repo: <a href="https://github.com/leonardocppn/med-rag">github.com/leonardocppn/med-rag</a></p>
+                        </div>
+                    </div>
+                    <div class="cv-entry">
+                        <div class="cv-when">2025<br>Personal project</div>
+                        <div class="cv-what">
+                            <strong>mbsync-mcp</strong> &mdash; MCP server for local email management.
+                            <p>Python-based server implementing the Model Context Protocol, enabling LLM-driven email workflows directly through Claude. Integrates with a local mbsync setup for self-hosted email and exposes tools for reading, searching, archiving, and triaging messages via natural language.</p>
+                            <p>Repo: <a href="https://github.com/leonardocppn/mbsync-mcp">github.com/leonardocppn/mbsync-mcp</a></p>
+                        </div>
+                    </div>
+                    <div class="cv-entry">
+                        <div class="cv-when">2026<br>Personal project</div>
+                        <div class="cv-what">
+                            <strong>arxiv-pulse</strong> &mdash; Publication trends on arXiv (1995&ndash;2025): physics vs CS/AI.
+                            <p>Data collection from the arXiv API (~310 queries), cleaning, EDA, and visualization with pandas, NumPy, Matplotlib, seaborn, and Jupyter. Aggregations in SQL (SQLite). CS/AI overtakes physics around 2018 (share of total up from 2.8% in 1995 to 78.5% in 2025).</p>
+                            <p>Repo: <a href="https://github.com/leonardocppn/arxiv-pulse">github.com/leonardocppn/arxiv-pulse</a></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cv-section">
+                    <h2>Publications</h2>
+                    <div class="cv-entry">
+                        <div class="cv-when">2026<br>(Forthcoming)</div>
+                        <div class="cv-what">
+                            <strong>Bachelor's Thesis</strong> &mdash; Pisa University Press<br>
+                            <em>L'intuizione che port&ograve; alla Meccanica Matriciale di Heisenberg</em>
+                            <p>Study of Heisenberg's celebrated 1925 paper, analyzing in detail the physical, mathematical, and deductive processes, still difficult to interpret today, that led to the conception of Matrix Mechanics as it is currently studied and taught.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cv-section">
+                    <h2>Conferences and Seminars</h2>
+                    <div class="cv-entry">
+                        <div class="cv-when">04/11/2022<br>Conference</div>
+                        <div class="cv-what">
+                            <strong>EAGx Rotterdam 2022</strong> &mdash; Effective Altruism<br>
+                            Postillion Convention Centre (World Trade Centre), Rotterdam
+                            <p>International workshop on global challenges, with focus on longtermism, global health, and AI risks. Thematic talks, training activities, and networking sessions.</p>
+                            <p>Event: <a href="https://www.effectivealtruism.org/ea-global/events/eagxrotterdam-2022">effectivealtruism.org/ea-global/events/eagxrotterdam-2022</a></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cv-section">
+                    <h2>Work Experience</h2>
+                    <div class="cv-entry">
+                        <div class="cv-when">03/2014&ndash;07/2014</div>
+                        <div class="cv-what">
+                            <strong>Software Developer</strong>, Commit Software (FI)<br>
+                            <strong>Activities:</strong> Backend programming of a web application in AngularJS.
+                            <p>School-work alternation internship.</p>
+                        </div>
+                    </div>
+                    <div class="cv-entry">
+                        <div class="cv-when">2022&ndash;present</div>
+                        <div class="cv-what">
+                            <strong>Check-in Manager</strong>, L'OZioRinco Apartments (Family business)<br>
+                            <strong>Main activities:</strong> Guest reception, key delivery, apartment condition checks, arrival and departure management.<br>
+                            <strong>Skills:</strong> Communication with international clients, unexpected issue management.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cv-section">
+                    <h2>Language Proficiency</h2>
+                    <div class="cv-entry">
+                        <div class="cv-when">Italian</div>
+                        <div class="cv-what">Native speaker</div>
+                    </div>
+                    <div class="cv-entry">
+                        <div class="cv-when">English</div>
+                        <div class="cv-what">C1</div>
+                    </div>
+                </div>
+
+                <div class="cv-section">
+                    <h2>Interests</h2>
+                    <p>Literature (Bradbury, Tolkien, Huxley, Kafka), theravada meditation as a daily practice, acoustic guitar since age 12, occasional sculptor.<br>
+                    I tend a potted olive tree on equal terms: I look after it, it looks after me.</p>
+                </div>
+
+                <p style="font-size: 0.9em; margin-top: 2.5rem; text-align:right;"><a style="color: #666; text-decoration: none;" href="index.html">&larr; Back</a></p>
+
             </div>
         </div>
     </div>
