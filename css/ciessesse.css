@@ -82,10 +82,10 @@ header.site-header {
     font-size: 1.4rem;
     color: #155263;
     background: #eef2f4;
-    padding: 0 5px;
+    padding: 0 4px;
     z-index: 100;
-    letter-spacing: -0.09em;
-    padding-right: 6px;
+    letter-spacing: -0.08em;
+    padding-right: 5px;
 }
 
 .wave-packet-slot {
