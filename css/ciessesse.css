@@ -153,7 +153,7 @@ header.site-header {
 }
 .site-header .navbar-brand {
     position: absolute;
-    right: calc(2.5% + 70px);
+    right: calc(2.5% + 80px);
     bottom: 0;
 }
 @media (max-width: 600px) {
