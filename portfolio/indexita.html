@@ -39,6 +39,16 @@
             text-decoration: underline;
             text-decoration-thickness: 2px !important;
         }
+
+        .proj-title {
+            display: grid;
+            grid-template-columns: 70% 30%;
+            align-items: baseline;
+        }
+
+        .proj-title-links {
+            text-align: right;
+        }
     </style>
     <title>Portfolio</title>
 </head>
@@ -57,7 +67,7 @@
     <div class="container" style="font-size:0.9rem">
         <div class="row">
             <main class="col-12 col-md-9" style="padding-top:30px">
-                <div style="background: #ced7d9; margin-bottom:30px; border-radius: 8px; padding: 10px; display: flex; gap: 15px; align-items: center; box-shadow: 0 0 0 3px white, 0 0 0 6px #ced7d9;">
+                <div style="background: #ced7d9; border-radius: 8px; padding: 10px; display: flex; gap: 15px; align-items: center; box-shadow: 0 0 0 3px white, 0 0 0 6px #ced7d9;">
                     <div>
                         <img src="../assets/oktobercat.png" style="width: 105px;">
                     </div>
@@ -71,17 +81,13 @@
                         Di seguito alcuni progetti, fatti nel tempo libero, che spaziano da strumenti pratici e più o meno utili a esperimenti con tecnologie vecchie e più nuove.
                     </div>
                 </div>
-                <p style="font-size: 0.9em; text-align:right; margin:0;"><a style="color: #666; text-decoration: none; margin-bottom:5px;" href="../index.html">&larr; Torna alla home</a></p>
-                <!--
-                <h4 style="margin-bottom:0px;">Progetti</h4>
-                Di seguito stanno alcuni progetti fatti nel tempo libero:<br><br>
-                -->
+                <p style="font-size: 0.9em; text-align:right; margin-bottom:20px; margin-top:12px;"><a style="color: #666; text-decoration: none; margin-bottom:5px;" href="../index.html">&larr; Torna alla home</a></p>
 
 
-
-
-
-                <b>med-rag</b> [<a href="https://github.com/leonardocppn/med-rag">Repo</a>]<br>
+                <div class="proj-title">
+                    <span><b>med-rag</b></span>
+                    <span class="proj-title-links">[<a href="https://github.com/leonardocppn/med-rag">Repo</a>]</span>
+                </div>
                 <hr style="border: 0; border-top: 1px solid #000;margin-top: 0px;margin-bottom: 3px;">
                 Una pipeline RAG per fare queries su documenti PDF in linguaggio naturale, basata su Claude o su qualsiasi modello locale di Ollama. Progettata per navigare archivi di referti medici personali che coprono anni di storia clinica, è ovviamente adattabile a qualsiasi caso d'uso. Gestisce PDF strutturati (referti di laboratorio con tabelle, layout multicolonna) e documenti narrativi con analisi adattiva del layout.<br>
                 <div class="med" style="font-size:14px">Mostra altro...</div>
@@ -102,28 +108,18 @@
                     </div>
                 </div>
                 <br>
-                <b>mbsync mcp server</b> [<a href="https://github.com/leonardocppn/mbsync-mcp">Repo</a>]<br>
+                <div class="proj-title">
+                    <span><b>mbsync mcp server</b></span>
+                    <span class="proj-title-links">[<a style="text-decoration:none;" href="https://github.com/leonardocppn/mbsync-mcp">Repo</a>]</span>
+                </div>
                 <hr style="border: 0; border-top: 1px solid #000;margin-top: 0px;margin-bottom: 3px;">
                 Un server Model Context Protocol (MCP) che consente di sincronizzare ed elaborare localmente la propria casella di posta con l'aiuto di un LLM. Nasce dalle ceneri di un progetto (che potrei riprendere in futuro) per gestire Thunderbird <img src="imgs/tndrb.ico" style="width: 25px; border-radius:10%; box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3); vertical-align: middle;"> ed è stato convertito per funzionare con mbsync.<br>
-                <div class="mbsync" style="font-size:14px">Mostra di più...</div>
-                <div class="mcp" style="align-items: center;display: none;gap:20px">
-                    <div style="box-sizing: border-box; text-align: center;">
-                        <img src="imgs/mcp.png" style="width: 100%; max-width: 680px; box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);">
-                    </div>
-                    <div style="box-sizing: border-box;text-align:left;">
-                        Le funzionalità principali includono:
-                        <ul style="margin: 5px;">
-                            <li>Lettura email da cartelle Maildir sincronizzate con mbsync.</li>
-                            <li>Ricerca per mittente, oggetto o contenuto.</li>
-                            <li>Filtri per intervallo di date e stato letto/non letto.</li>
-                            <li>Operazioni IMAP: spostare, cancellare, archiviare email.</li>
-                            <li>Cleanup batch: cancellare/archiviare email multiple in un solo comando.</li>
-                            <li>Daily briefing: riepilogo inbox con mittenti principali.</li>
-                        </ul>
-                    </div>
-                </div>
+                <b><a style="margin: 0 2px;" href="../projects/mbsyncmcp.html">Vedi la pagina del progetto...</a></b><br>
                 <br>
-                <b>arXiv-pulse</b> [<a href="https://github.com/leonardocppn/arxiv-pulse">Repo</a>]<br>
+                <div class="proj-title">
+                    <span><b>arXiv-pulse</b></span>
+                    <span class="proj-title-links">[<a href="https://github.com/leonardocppn/arxiv-pulse">Repo</a>]</span>
+                </div>
                 <hr style="border: 0; border-top: 1px solid #000;margin-top: 0px;margin-bottom: 3px;">
                 Un progetto di data analysis end-to-end su dati reali, che ripercorre 30 anni di pubblicazioni su arXiv (1995–2025): il contrasto tra i campi storici della fisica e l'esplosione dell'informatica e dell'AI. Copre l'intera pipeline: raccolta dall'API pubblica di arXiv, pulizia, analisi esplorativa, visualizzazione e una lettura narrata dei risultati.<br>
                 <div class="arxiv" style="font-size:14px">Mostra di più...</div>
@@ -145,7 +141,10 @@
                     </div>
                 </div>
                 <br>
-                <b>Tracker delle spese</b> [<a href="https://github.com/leonardocppn/expenses-tracker-pwa">Repo</a>]<br>
+                <div class="proj-title">
+                    <span><b>Tracker delle spese</b></span>
+                    <span class="proj-title-links">[<a href="https://github.com/leonardocppn/expenses-tracker-pwa">Repo</a>]</span>
+                </div>
                 <hr style="border: 0; border-top: 1px solid #000;margin-top: 0px;margin-bottom: 3px;">
                 Una PWA che vuole facilitare l'utente nel monitorare le proprie spese personali, dividendole per tipo (essenziali, di piacere o altro) e categorie (cibo, salute, abbonamenti, trasporti). Così da poter capire, in fasce mensili, quant'è l'ammontare totale o specifico, e visualizzare direttamente quali sono le aree su cui investire maggiori attenzioni per risparmiare.<br>
                 <div class="tracker" style="font-size:14px">Mostra di più...</div>
@@ -163,7 +162,10 @@
                     </div>
                 </div>
                 <br>
-                <b>Book club tracker</b> [<a href="https://github.com/leonardocppn/book-club-tracker">Repo</a>] [<a href="https://leonardocppn.github.io/book-club-tracker/">Demo</a>]<br>
+                <div class="proj-title">
+                    <span><b>Book club tracker</b></span>
+                    <span class="proj-title-links">[<a href="https://github.com/leonardocppn/book-club-tracker">Repo</a>] [<a href="https://leonardocppn.github.io/book-club-tracker/">Demo</a>]</span>
+                </div>
                 <hr style="border: 0; border-top: 1px solid #000;margin-top: 0px;margin-bottom: 3px;">
                 Una PWA minimale che consente a un piccolo club di lettura di poter seguire la progressione della lettura di tutti i membri.<br>
                 <div class="book-tracker" style="font-size:14px">Mostra di più...</div>
@@ -180,7 +182,10 @@
                     </div>
                 </div>
                 <br>
-                <b>Ricerca stoica</b> [<a href="https://github.com/leonardocppn/stoic-search">Repo</a>] [<a href="https://leonardocppn.github.io/stoic-search/">Demo</a>]<br>
+                <div class="proj-title">
+                    <span><b>Ricerca stoica</b></span>
+                    <span class="proj-title-links">[<a href="https://github.com/leonardocppn/stoic-search">Repo</a>] [<a href="https://leonardocppn.github.io/stoic-search/">Demo</a>]</span>
+                </div>
                 <hr style="border: 0; border-top: 1px solid #000;margin-top: 0px;margin-bottom: 3px;">
                 Home page del browser minimale con barra di ricerca (DuckDuckGo), barra dei preferiti (dati salvati su LocalStorage) e una citazione diversa per ogni giorno dell'anno di Marco Aurelio per ravvivare l'umore.<br>
                 <div class="marco" style="font-size:14px">Mostra di più...</div>
@@ -193,7 +198,10 @@
                     </div>
                 </div>
                 <br>
-                <b>Bud-dot</b> [work in progress]<br>
+                <div class="proj-title">
+                    <span><b>Bud-dot</b></span>
+                    <span class="proj-title-links">[work in progress]</span>
+                </div>
                 <hr style="border: 0; border-top: 1px solid #000;margin-top: 0px;margin-bottom: 3px;">
                 Un giochino ove interagire con l'API di Anthropic.
                 <br><br>
@@ -239,7 +247,6 @@
 
         setupToggle('.book-tracker', '.book-descr', 'flex');
         setupToggle('.marco', '.aurelio', 'block');
-        setupToggle('.mbsync', '.mcp', 'block');
         setupToggle('.med', '.rag', 'block');
         setupToggle('.tracker', '.spese', 'block');
         setupToggle('.arxiv', '.pulse', 'block');
