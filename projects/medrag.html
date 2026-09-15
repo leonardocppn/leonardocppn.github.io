@@ -317,10 +317,10 @@
 
                 <div class="proj-row" style="--cols: 4fr 4fr;">
                     <div class="proj-col">
-                        <p>med-rag answers questions about a folder of PDFs in plain language. It reads the documents once, keeps the text and the embeddings in a database on your machine, and then, for every question, retrieves the passages that bear on it and hands them to a language model. It works with a model running locally through Ollama, or with Claude through the API.</p>
+                        <p><strong>med-rag</strong> answers questions about a folder of PDFs in plain language. It reads the documents once, keeps the text and the embeddings in a database on your machine, and then, for every question, retrieves the passages that bear on it and hands them to a language model. It works with a model running locally through Ollama, or with Claude through the API.</p>
                         <p>Indexing runs on the CPU, with an embedding model of about 50MB in ONNX and no GPU. With the Claude backend the machine does nothing heavier, so any ordinary laptop is enough. (Running the model locally through Ollama needs more memory, so use a model at least as capable as gemma3:12b).</p>
                         <p>It was written for an archive of medical reports large enough that finding a single value meant opening the files one after another until it turned up. It also handles simpler plain pages, where there are no tables to reconstruct.</p>
-                        <p>I also used med-rag while writing my thesis and preparing it for publication, to retrieve the references across the dozens of PDFs I had accumulated. It was better than searching each PDF with Ctrl+F or using an LLM that, by reading every PDF entirely, would have cost a huge amount of tokens.</p>
+                        <p>I also used <strong>med-rag</strong> while writing my thesis and preparing it for publication, to retrieve the references across the dozens of PDFs I had accumulated. It was better than searching each PDF with Ctrl+F or using an LLM that, by reading every PDF entirely, would have cost a huge amount of tokens.</p>
                         <p>Source and instructions are available at<br> <a href="https://github.com/leonardocppn/med-rag">github.com/leonardocppn/med-rag</a>.</p>
                     </div>
                     <div class="proj-col proj-col-mid">
