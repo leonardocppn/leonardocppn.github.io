@@ -90,23 +90,7 @@
                 </div>
                 <hr style="border: 0; border-top: 1px solid #000;margin-top: 0px;margin-bottom: 3px;">
                 Una pipeline RAG per fare queries su documenti PDF in linguaggio naturale, basata su Claude o su qualsiasi modello locale di Ollama. Progettata per navigare archivi di referti medici personali che coprono anni di storia clinica, è ovviamente adattabile a qualsiasi caso d'uso. Gestisce PDF strutturati (referti di laboratorio con tabelle, layout multicolonna) e documenti narrativi con analisi adattiva del layout.<br>
-                <div class="med" style="font-size:14px">Mostra altro...</div>
-                <div class="rag" style="align-items: center;display: none;gap:20px">
-                    <div style="box-sizing: border-box;text-align:left;">
-                        Funzionalità principali:
-                        <ul style="margin: 5px;">
-                            <li>Parsing adattivo del layout: i parametri vengono derivati dalle metriche del documento stesso, senza soglie hardcoded. Classifica i blocchi in titolo, header, footer e body. Rileva layout multicolonna.</li>
-                            <li>Modalità testo semplice per documenti narrativi come note cliniche e lettere di dimissione (o qualsiasi documento a colonna singola), dove l'analisi del layout non è necessaria.</li>
-                            <li>Embedding multilingua tramite fastembed (ONNX, senza GPU), memorizzati in ChromaDB.</li>
-                            <li>Re-ranking con cross-encoder opzionale per un recupero più preciso.</li>
-                            <li>Corpus multi-documento: indicizza più PDF e interrogali insieme.</li>
-                            <li>Chat multi-turno e riepiloghi strutturati dei documenti.</li>
-                            <li>Sincronizzazione incrementale: reindicizza solo i file nuovi, con deduplicazione per contenuto.</li>
-                            <li>Ricerca per parole chiave con BM25, senza coinvolgere un LLM.</li>
-                            <li>Doppio backend LLM: Claude (API Anthropic) o qualsiasi modello locale tramite Ollama.</li>
-                        </ul>
-                    </div>
-                </div>
+                <b><a style="margin: 0 2px;" href="../projects/medrag.html">Vedi la pagina del progetto...</a></b><br>
                 <br>
                 <div class="proj-title">
                     <span><b>mbsync mcp server</b></span>
@@ -247,7 +231,6 @@
 
         setupToggle('.book-tracker', '.book-descr', 'flex');
         setupToggle('.marco', '.aurelio', 'block');
-        setupToggle('.med', '.rag', 'block');
         setupToggle('.tracker', '.spese', 'block');
         setupToggle('.arxiv', '.pulse', 'block');
     </script>
