@@ -31,6 +31,11 @@
             min-width: 0;
         }
 
+        /* Le colonne con le figure stanno a meta' altezza della riga */
+        .proj-row > .proj-col-mid {
+            align-self: center;
+        }
+
         .proj-img {
             display: block;
             width: 100%;
@@ -46,118 +51,102 @@
         }
 
 
-        /* Finestra console simulata */
-        .cc-window {
-            background: #1f1e1d;
-            border: 1px solid #3a3835;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+        /* Schema animato del percorso dei dati */
+        .rag-fig {
+            max-width: 520px;
+            margin: 0.9rem 0 0;
         }
 
-        .cc-titlebar {
+        .rag-fig svg {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        .rag-bar {
+            position: relative;
             display: flex;
             align-items: center;
-            gap: 0.45rem;
-            padding: 0.45rem 0.7rem;
-            background: #2a2826;
-            border-bottom: 1px solid #3a3835;
+            max-width: 520px;
+            margin-top: 0.35rem;
+            margin-bottom: 20px;
         }
 
-        .cc-logo {
-            width: 18px;
-            height: 18px;
-            display: block;
+        /* La nota sta al centro della barra, il bottone resta ancorato a destra.
+           Il padding laterale e' simmetrico, altrimenti lo spazio riservato al
+           bottone sposterebbe il centro del testo verso sinistra. */
+        .rag-bar .proj-note {
+            flex: 1;
+            text-align: center;
+            padding: 0 1.6rem;
         }
 
-        .cc-title {
-            color: #b9b5ae;
-            font-size: 0.75rem;
-            letter-spacing: 0.02em;
-        }
-
-        .cc-replay {
-            margin-left: auto;
+        .rag-replay {
+            position: absolute;
+            right: 9px;
+            top: 50%;
+            transform: translateY(-50%);
             background: none;
             border: 0;
             padding: 0 2px;
-            color: #fff;
+            color: #5a6166;
             font-size: 0.95rem;
             line-height: 1;
             cursor: pointer;
         }
 
-        .cc-replay:hover {
-            color: #d97757;
+        .rag-replay:hover {
+            color: #b8552f;
         }
 
-        .cc-body {
-            height: 24rem;
-            overflow-y: auto;
-            padding: 0.8rem 0.9rem 1.2rem;
-            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-            font-size: 0.72rem;
-            line-height: 1.55;
-            color: #e8e6e3;
-            white-space: pre-wrap;
-            overflow-wrap: break-word;
+        .rag-svg.staged .b1,
+        .rag-svg.staged .b2,
+        .rag-svg.staged .b3,
+        .rag-svg.staged .b4,
+        .rag-svg.staged .b5 {
+            opacity: 0;
+            transition: opacity 0.45s ease;
         }
 
-        .cc-body::-webkit-scrollbar {
-            width: 8px;
+        .rag-svg.s1 .b1,
+        .rag-svg.s2 .b2,
+        .rag-svg.s3 .b3,
+        .rag-svg.s4 .b4,
+        .rag-svg.s5 .b5 {
+            opacity: 1;
         }
 
-        .cc-body::-webkit-scrollbar-thumb {
-            background: #3a3835;
-            border-radius: 4px;
+        .rag-grid {
+            transition: opacity 0.5s ease;
         }
 
-        .cc-user {
-            margin: 0.1rem 0 0.9rem;
-            padding: 0.25rem 0.5rem;
-            background: #2b2927;
-            border-left: 2px solid #4a4744;
-            color: #cfcbc5;
+        .rag-svg.s3 .rag-grid {
+            opacity: 0.38;
         }
 
-        .cc-block {
-            margin-bottom: 0.85rem;
+        .rag-cell {
+            opacity: 0;
+            transition: opacity 0.35s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.3, 1);
         }
 
-        .cc-dot {
-            color: #d97757;
+        .rag-cell.on {
+            opacity: 1;
         }
 
-        .cc-arg {
-            color: #9a9691;
+        .rag-hit {
+            opacity: 0;
+            transition: opacity 0.35s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.3, 1);
         }
 
-        .cc-res {
-            color: #8c8a87;
-        }
-
-        .cc-ok {
-            color: #7cae7a;
-        }
-
-        .cc-dim {
-            color: #6f6c68;
-        }
-
-        .cc-hl {
-            color: #d97757;
-        }
-
-        .cc-cursor {
-            animation: cc-blink 1s step-end infinite;
-        }
-
-        @keyframes cc-blink {
-            50% { opacity: 0; }
+        .rag-hit.on {
+            opacity: 1;
         }
 
         @media (prefers-reduced-motion: reduce) {
-            .cc-cursor { animation: none; }
+            .rag-cell,
+            .rag-hit {
+                transition: none;
+            }
         }
 
 
@@ -242,6 +231,8 @@
             color: #e8e6e3;
             font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
             font-size: 0.78rem;
+            line-height: 1.7;
+            white-space: pre;
             overflow-x: auto;
         }
 
@@ -271,7 +262,6 @@
             grid-template-columns: 11rem 1fr;
             gap: 0.3rem 1.2rem;
             margin-top: 0.6rem;
-            max-width: 48rem;
         }
 
         .tool-grid dt {
@@ -322,100 +312,193 @@
                 <p style="font-size: 0.9em; text-align:right; margin-top:-20px; margin-bottom: 0px;"><a style="color: #666; text-decoration: none;" href="../portfolio/index.html">&larr; Back</a></p>
 
 
-                <div class="cv-name">mbsync-mcp</div>
+                <div class="cv-name">med-rag</div>
 
 
-                <div class="proj-row">
+                <div class="proj-row" style="--cols: 4fr 4fr;">
                     <div class="proj-col">
-                        <p>An MCP server that lets an AI assistant read and file your email from the Maildir that mbsync already keeps on your machine. The server reads the folders and the configuration of the mbsync mailbox, without uploading anything on the internet.</p>
-                        <strong>mbsync</strong> keeps a local Maildir copy of your IMAP accounts in sync with the server, and mbsync-mcp works on that copy by exposing the mailbox through
-                            the <a href="https://modelcontextprotocol.io/">Model Context
-                            Protocol</a>, so that a client like Claude Code can list, read, search
-                            and file messages by calling tools.</p>
-                        <p>Accounts, hosts and Maildir paths come from the
-                            <code>~/.mbsyncrc</code> file you have stored on your computer. The server keeps no configuration of its own and reading your mail doesn't require any password.</p>
-                        <p>As a personal project, this MCP server works only on Linux and macOS.</p>
-                        <p>Source and instructions are available at:<br> <a href="https://github.com/leonardocppn/mbsync-mcp">github.com/leonardocppn/mbsync-mcp</a>.
+                        <p>med-rag answers questions about a folder of PDFs in plain language. It reads the documents once, keeps the text and the embeddings in a database on your machine, and then, for every question, retrieves the passages that bear on it and hands them to a language model. It works with a model running locally through Ollama, or with Claude through the API.</p>
+                        <p>Indexing runs on the CPU, with an embedding model of about 50MB in ONNX and no GPU. With the Claude backend the machine does nothing heavier, so any ordinary laptop is enough. (Running the model locally through Ollama needs more memory, so use a model at least as capable as gemma3:12b).</p>
+                        <p>It was written for an archive of medical reports large enough that finding a single value meant opening the files one after another until it turned up. It also handles simpler plain pages, where there are no tables to reconstruct.</p>
+                        <p>I also used med-rag while writing my thesis and preparing it for publication, to retrieve the references across the dozens of PDFs I had accumulated. It was better than searching each PDF with Ctrl+F or using an LLM that, by reading every PDF entirely, would have cost a huge amount of tokens.</p>
+                        <p>Source and instructions are available at<br> <a href="https://github.com/leonardocppn/med-rag">github.com/leonardocppn/med-rag</a>.</p>
                     </div>
-                    <div class="proj-col">
-                        <div class="cc-window">
-                            <div class="cc-titlebar">
-                                <img class="cc-logo" src="imgs/claudecode.svg" alt="">
-                                <span class="cc-title">claude code</span>
-                                <button class="cc-replay" type="button" aria-label="Replay">&#8635;</button>
-                            </div>
-                            <div class="cc-body"></div>
-                        </div>
+                    <div class="proj-col proj-col-mid">
+                        <div class="rag-fig">
+                        <svg class="rag-svg" viewBox="0 0 480 390" role="img"
+                             aria-label="Animated diagram: eight reports of 160 pages are cut into 1,068 passages stored in a local ChromaDB, a question lights up the five nearest passages, and only those five reach the language model, which answers with the pages they came from.">
+                          <defs>
+                            <marker id="ragar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                              <path d="M 0 0 L 10 5 L 0 10 z" fill="#6b7478"></path>
+                            </marker>
+                          </defs>
+
+                          <g class="b1" font-family="system-ui, sans-serif">
+                            <text x="240" y="14" font-size="11" fill="#5a6166" text-anchor="middle">8 reports, 160 pages</text>
+                            <g>
+                              <rect x="113" y="24" width="16" height="21" rx="2" fill="#ffffff" stroke="#155263" stroke-width="1.2"></rect>
+                              <line x1="116" y1="30" x2="126" y2="30" stroke="#155263" stroke-width="1" opacity="0.45"></line>
+                              <line x1="116" y1="34" x2="126" y2="34" stroke="#155263" stroke-width="1" opacity="0.45"></line>
+                              <line x1="116" y1="38" x2="123" y2="38" stroke="#155263" stroke-width="1" opacity="0.45"></line>
+                            </g>
+                            <g>
+                              <rect x="147" y="24" width="16" height="21" rx="2" fill="#ffffff" stroke="#c5794f" stroke-width="1.2"></rect>
+                              <line x1="150" y1="30" x2="160" y2="30" stroke="#c5794f" stroke-width="1" opacity="0.45"></line>
+                              <line x1="150" y1="34" x2="160" y2="34" stroke="#c5794f" stroke-width="1" opacity="0.45"></line>
+                              <line x1="150" y1="38" x2="157" y2="38" stroke="#c5794f" stroke-width="1" opacity="0.45"></line>
+                            </g>
+                            <g>
+                              <rect x="181" y="24" width="16" height="21" rx="2" fill="#ffffff" stroke="#3a8a91" stroke-width="1.2"></rect>
+                              <line x1="184" y1="30" x2="194" y2="30" stroke="#3a8a91" stroke-width="1" opacity="0.45"></line>
+                              <line x1="184" y1="34" x2="194" y2="34" stroke="#3a8a91" stroke-width="1" opacity="0.45"></line>
+                              <line x1="184" y1="38" x2="191" y2="38" stroke="#3a8a91" stroke-width="1" opacity="0.45"></line>
+                            </g>
+                            <g>
+                              <rect x="215" y="24" width="16" height="21" rx="2" fill="#ffffff" stroke="#b8552f" stroke-width="1.2"></rect>
+                              <line x1="218" y1="30" x2="228" y2="30" stroke="#b8552f" stroke-width="1" opacity="0.45"></line>
+                              <line x1="218" y1="34" x2="228" y2="34" stroke="#b8552f" stroke-width="1" opacity="0.45"></line>
+                              <line x1="218" y1="38" x2="225" y2="38" stroke="#b8552f" stroke-width="1" opacity="0.45"></line>
+                            </g>
+                            <g>
+                              <rect x="249" y="24" width="16" height="21" rx="2" fill="#ffffff" stroke="#5fa3a3" stroke-width="1.2"></rect>
+                              <line x1="252" y1="30" x2="262" y2="30" stroke="#5fa3a3" stroke-width="1" opacity="0.45"></line>
+                              <line x1="252" y1="34" x2="262" y2="34" stroke="#5fa3a3" stroke-width="1" opacity="0.45"></line>
+                              <line x1="252" y1="38" x2="259" y2="38" stroke="#5fa3a3" stroke-width="1" opacity="0.45"></line>
+                            </g>
+                            <g>
+                              <rect x="283" y="24" width="16" height="21" rx="2" fill="#ffffff" stroke="#c0a184" stroke-width="1.2"></rect>
+                              <line x1="286" y1="30" x2="296" y2="30" stroke="#c0a184" stroke-width="1" opacity="0.45"></line>
+                              <line x1="286" y1="34" x2="296" y2="34" stroke="#c0a184" stroke-width="1" opacity="0.45"></line>
+                              <line x1="286" y1="38" x2="293" y2="38" stroke="#c0a184" stroke-width="1" opacity="0.45"></line>
+                            </g>
+                            <g>
+                              <rect x="317" y="24" width="16" height="21" rx="2" fill="#ffffff" stroke="#27707e" stroke-width="1.2"></rect>
+                              <line x1="320" y1="30" x2="330" y2="30" stroke="#27707e" stroke-width="1" opacity="0.45"></line>
+                              <line x1="320" y1="34" x2="330" y2="34" stroke="#27707e" stroke-width="1" opacity="0.45"></line>
+                              <line x1="320" y1="38" x2="327" y2="38" stroke="#27707e" stroke-width="1" opacity="0.45"></line>
+                            </g>
+                            <g>
+                              <rect x="351" y="24" width="16" height="21" rx="2" fill="#ffffff" stroke="#8fb3a6" stroke-width="1.2"></rect>
+                              <line x1="354" y1="30" x2="364" y2="30" stroke="#8fb3a6" stroke-width="1" opacity="0.45"></line>
+                              <line x1="354" y1="34" x2="364" y2="34" stroke="#8fb3a6" stroke-width="1" opacity="0.45"></line>
+                              <line x1="354" y1="38" x2="361" y2="38" stroke="#8fb3a6" stroke-width="1" opacity="0.45"></line>
+                            </g>
+                            <line x1="240" y1="50" x2="240" y2="64" stroke="#6b7478" stroke-width="1.4" marker-end="url(#ragar)"></line>
+                          </g>
+
+                          <g class="b2" font-family="system-ui, sans-serif">
+                            <rect x="40" y="68" width="400" height="116" rx="6" fill="#ffffff" stroke="#155263" stroke-width="1.5"></rect>
+                            <text x="52" y="88" font-size="12" font-weight="600" fill="#262b2e">ChromaDB</text>
+                            <text class="rag-count" x="428" y="88" font-size="11" fill="#5a6166" text-anchor="end">1,068 chunks</text>
+                            <text x="240" y="176" font-size="10" fill="#8a9297" text-anchor="middle">embedded once, stored on this machine</text>
+                          </g>
+                          <g class="rag-grid"></g>
+
+                          <g class="b3" font-family="system-ui, sans-serif">
+                            <path d="M 240 202 L 240 190" stroke="#6b7478" stroke-width="1.4" stroke-dasharray="3 3" fill="none" marker-end="url(#ragar)"></path>
+                            <rect x="40" y="204" width="400" height="30" rx="15" fill="#eef3f5" stroke="#c8d3d8" stroke-width="1"></rect>
+                            <text x="56" y="223" font-size="11" fill="#3d454a" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">Has haemoglobin ever gone below range?</text>
+                          </g>
+
+                          <g class="b4" font-family="system-ui, sans-serif">
+                            <g fill="none" stroke="#c8d3d8" stroke-width="1" stroke-dasharray="2 2">
+                              <rect x="318" y="214" width="10" height="10" rx="2"></rect>
+                              <rect x="334" y="214" width="10" height="10" rx="2"></rect>
+                              <rect x="350" y="214" width="10" height="10" rx="2"></rect>
+                              <rect x="366" y="214" width="10" height="10" rx="2"></rect>
+                              <rect x="382" y="214" width="10" height="10" rx="2"></rect>
+                            </g>
+                            <line x1="240" y1="238" x2="240" y2="254" stroke="#6b7478" stroke-width="1.4" marker-end="url(#ragar)"></line>
+                            <text x="230" y="250" font-size="10.5" fill="#5a6166" text-anchor="end">~500 tokens sent, not 100k</text>
+                            <rect x="40" y="258" width="400" height="44" rx="6" fill="#ffffff" stroke="#155263" stroke-width="1.5"></rect>
+                            <text x="240" y="278" font-size="13" font-weight="600" fill="#262b2e" text-anchor="middle">language model</text>
+                            <text x="240" y="293" font-size="11" fill="#5a6166" text-anchor="middle">Ollama on this machine, or Claude</text>
+                          </g>
+
+                          <g class="b5" font-family="system-ui, sans-serif">
+                            <line x1="240" y1="302" x2="240" y2="318" stroke="#6b7478" stroke-width="1.4" marker-end="url(#ragar)"></line>
+                            <rect x="40" y="322" width="400" height="52" rx="6" fill="#ffffff" stroke="#c8d3d8" stroke-width="1"></rect>
+                            <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#2f3538">
+                              <text x="56" y="343">Below range in <tspan fill="#b8552f">March 2023</tspan>, 11.4 g/dL <tspan fill="#b8552f">[page 2]</tspan></text>
+                              <text x="56" y="359">and <tspan fill="#b8552f">September 2023</tspan>, 12.2 g/dL <tspan fill="#b8552f">[page 1]</tspan>.</text>
+                            </g>
+                          </g>
+
+                          <g class="rag-hits"></g>
+
+                          <g font-family="system-ui, sans-serif" font-size="10" fill="#9aa3a7">
+                            <line x1="452" y1="20" x2="452" y2="184" stroke="#d5dde0" stroke-width="1"></line>
+                            <line x1="452" y1="204" x2="452" y2="374" stroke="#d5dde0" stroke-width="1"></line>
+                            <text x="468" y="102" text-anchor="middle" transform="rotate(-90 468 102)">indexed once</text>
+                            <text x="468" y="289" text-anchor="middle" transform="rotate(-90 468 289)">per question</text>
+                          </g>
+                        </svg>
+                    </div>
+                    <div class="rag-bar">
+                        <span class="proj-note">Figures are an example for an archive of that size.</span>
+                        <button class="rag-replay" type="button" aria-label="Replay">&#8635;</button>
+                    </div>
                     </div>
                 </div>
                 <hr>
 
 
-                <div class="proj-block">
-                        <div class="proj-h">It's useful!</div>
-                        <p><strong>mbsync</strong> is a command-line application that syncs IMAP4 mailboxes onto your computer (saving them in Maildir format). Your usual email accounts (Gmail, Outlook, or anything else) are synced one at a time or all together, and then analysed by an AI agent through this MCP server.</p>
-                        <p>The advantages of this MCP server are clear:<br>
-                        <b>1.</b> Once the emails are synced to disk, the data stays there and can be consulted offline.<br>
-                        <b>2.</b> The searches you can run are more powerful: you can search across several accounts at once, correlating messages far apart in time, drawing directly on their content rather than on their metadata.<br>
-                        <b>3.</b> MCP servers expose tools that an AI agent can use. <strong>mbsync-mcp</strong> is a Python script that can be extended at will with any function built for the purpose.</p>
-                        <p>This server is not meant as a replacement for a proper email client: mbsync itself does not send email (that needs a separate SMTP tool, msmtp or similar), and writes have to be propagated back to the IMAP servers. Unless you set up routines to sync periodically, it is not made to work in real time.<br>
-                        It is a powerful way to take proper stock of your mailboxes at specific points in the day.<p>
-                </div>
-                <hr>
-
-
-                <div class="proj-row" style="--cols: 5fr 4fr;">
+                <div class="proj-row" style="--cols: 6fr 5fr;">
                     <div class="proj-col">
                         <div class="proj-h">How it works</div>
-                        <p>The client starts <code>server.py</code> as a subprocess and talks to
-                            it over standard input and output, using JSON-RPC. The server runs only for
-                            as long as the client does.</p>
-                        <p>Inside, the work splits in two. <b>Reads never touch the network</b>,
-                            they walk the Maildir on disk, which is fast and works offline.
-                            <b>Writes go out over IMAP</b> to avoid conflicts. Since moving a message changes the mailbox, the local copy just mirrors the original, and changes must be propagated back to the IMAP servers.</p>
-                        <p>Besides the tools, the server publishes two MCP resources:
-                            <code>mbsync://accounts</code>, and
-                            <code>mbsync://account/&lt;name&gt;/folders</code> for each account
-                            it finds in your configuration.</p>
+                        <p>Indexing runs once per document. The profiler measures the layout and derives the parsing parameters, the parser extracts every text element with its coordinates and classifies it as title, header, footer, table or body, and what survives is embedded by a small multilingual model and written to a local ChromaDB collection. A scanned book comes out of the profiler with an impossible column density, produced by the OCR noise, and gets a parameter set that keeps the footnotes and skips the column and title rules. Narrative documents can skip the layout work entirely with <code>--plain</code>.</p>
+                        <p>Asking runs per question. The question is embedded the same way, the nearest chunks come back, and a cross-encoder can re-rank them when precision matters more than speed. The model receives those passages with the page they came from, and streams its answer to the terminal.</p>
+                        <p>Each PDF gets its own collection, and several can be grouped into a named corpus that is then queried as one document.</p>
                     </div>
-                    <div class="proj-col" style="max-width:462px;">
+                    <div class="proj-col proj-col-mid" style="max-width:462px;">
                         <svg viewBox="0 0 480 300" width="100%" role="img"
-                             aria-label="Diagram: the MCP client talks to server.py over stdio; server.py reads the local Maildir and writes over IMAP; mbsync syncs IMAP into the Maildir.">
+                             aria-label="Diagram: indexing runs from PDF through profiler and parser to embeddings stored in ChromaDB; asking runs from a question through retrieval of those chunks to the language model and the answer.">
                             <defs>
-                                <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5"
+                                <marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5"
                                         markerWidth="6" markerHeight="6" orient="auto-start-reverse">
                                     <path d="M 0 0 L 10 5 L 0 10 z" fill="#6b7478"></path>
                                 </marker>
                             </defs>
+                            <g font-family="system-ui, sans-serif" font-size="11" fill="#155263" text-anchor="middle">
+                                <text x="115" y="14">indexing</text>
+                                <text x="365" y="14">asking</text>
+                            </g>
                             <g fill="none" stroke="#155263" stroke-width="1.5">
-                                <rect x="118" y="10" width="244" height="46" rx="6" fill="#ffffff"></rect>
-                                <rect x="118" y="112" width="244" height="46" rx="6" fill="#ffffff"></rect>
-                                <rect x="34" y="212" width="180" height="52" rx="6" fill="#ffffff"></rect>
-                                <rect x="266" y="212" width="180" height="52" rx="6" fill="#ffffff"></rect>
+                                <rect x="20" y="26" width="190" height="44" rx="6" fill="#ffffff"></rect>
+                                <rect x="20" y="96" width="190" height="44" rx="6" fill="#ffffff"></rect>
+                                <rect x="20" y="166" width="190" height="44" rx="6" fill="#ffffff"></rect>
+                                <rect x="20" y="236" width="190" height="44" rx="6" fill="#ffffff"></rect>
+                                <rect x="270" y="26" width="190" height="44" rx="6" fill="#ffffff"></rect>
+                                <rect x="270" y="96" width="190" height="44" rx="6" fill="#ffffff"></rect>
+                                <rect x="270" y="166" width="190" height="44" rx="6" fill="#ffffff"></rect>
+                                <rect x="270" y="236" width="190" height="44" rx="6" fill="#ffffff"></rect>
                             </g>
-                            <g stroke="#6b7478" stroke-width="1.4" marker-end="url(#ar)" marker-start="url(#ar)">
-                                <line x1="240" y1="60" x2="240" y2="108"></line>
-                            </g>
-                            <g stroke="#6b7478" stroke-width="1.4" marker-end="url(#ar)">
-                                <line x1="160" y1="162" x2="124" y2="208"></line>
-                                <line x1="320" y1="162" x2="356" y2="208"></line>
-                                <path d="M 356 268 L 356 284 L 124 284 L 124 268" fill="none"></path>
+                            <g stroke="#6b7478" stroke-width="1.4" marker-end="url(#ar2)" fill="none">
+                                <line x1="115" y1="70" x2="115" y2="94"></line>
+                                <line x1="115" y1="140" x2="115" y2="164"></line>
+                                <line x1="115" y1="210" x2="115" y2="234"></line>
+                                <line x1="365" y1="70" x2="365" y2="94"></line>
+                                <line x1="365" y1="140" x2="365" y2="164"></line>
+                                <line x1="365" y1="210" x2="365" y2="234"></line>
+                                <path d="M 210 258 L 240 258 L 240 118 L 266 118"></path>
                             </g>
                             <g font-family="system-ui, sans-serif" text-anchor="middle" fill="#262b2e">
-                                <text x="240" y="32" font-size="13" font-weight="600">MCP client</text>
-                                <text x="240" y="48" font-size="11" fill="#5a6166">Claude Code, or any other</text>
-                                <text x="240" y="134" font-size="13" font-weight="600">server.py</text>
-                                <text x="240" y="150" font-size="11" fill="#5a6166">14 tools, 2 resources</text>
-                                <text x="124" y="235" font-size="13" font-weight="600">Maildir</text>
-                                <text x="124" y="251" font-size="11" fill="#5a6166">~/Mail/&lt;account&gt;</text>
-                                <text x="356" y="235" font-size="13" font-weight="600">IMAP server</text>
-                                <text x="356" y="251" font-size="11" fill="#5a6166">Gmail, Outlook, &#8230;</text>
-                            </g>
-                            <g font-family="system-ui, sans-serif" font-size="11" fill="#5a6166">
-                                <text x="252" y="88">stdio &#183; JSON-RPC 2.0</text>
-                                <text x="96" y="188" text-anchor="end">read</text>
-                                <text x="384" y="188">write</text>
-                                <text x="240" y="298" text-anchor="middle" fill="#155263">mbsync</text>
+                                <text x="115" y="48" font-size="13" font-weight="600">PDF</text>
+                                <text x="115" y="63" font-size="11" fill="#5a6166">a file, or a whole folder</text>
+                                <text x="115" y="118" font-size="13" font-weight="600">profiler + parser</text>
+                                <text x="115" y="133" font-size="11" fill="#5a6166">metrics, blocks, regions</text>
+                                <text x="115" y="188" font-size="13" font-weight="600">embeddings</text>
+                                <text x="115" y="203" font-size="11" fill="#5a6166">multilingual, ONNX, on CPU</text>
+                                <text x="115" y="258" font-size="13" font-weight="600">ChromaDB</text>
+                                <text x="115" y="273" font-size="11" fill="#5a6166">./chroma_db</text>
+                                <text x="365" y="48" font-size="13" font-weight="600">question</text>
+                                <text x="365" y="63" font-size="11" fill="#5a6166">one PDF, or a corpus</text>
+                                <text x="365" y="118" font-size="13" font-weight="600">retrieval</text>
+                                <text x="365" y="133" font-size="11" fill="#5a6166">nearest chunks, re-ranked</text>
+                                <text x="365" y="188" font-size="13" font-weight="600">language model</text>
+                                <text x="365" y="203" font-size="11" fill="#5a6166">Ollama, or Claude</text>
+                                <text x="365" y="258" font-size="13" font-weight="600">answer</text>
+                                <text x="365" y="273" font-size="11" fill="#5a6166">with the pages it came from</text>
                             </g>
                         </svg>
                     </div>
@@ -424,49 +507,47 @@
 
 
                 <div class="proj-block">
-                    <div class="proj-h">The tools</div>
-                    <p>Reading mode:</p>
+                    <div class="proj-h">The commands</div>
+                    <p>Reading documents in:</p>
                     <dl class="tool-grid">
-                        <dt>list_accounts</dt><dd>Accounts found in <code>~/.mbsyncrc</code>.</dd>
-                        <dt>list_folders</dt><dd>Folders available for an account, nested ones included.</dd>
-                        <dt>count_emails</dt><dd>Total and unread count for a folder.</dd>
-                        <dt>get_emails</dt><dd>Messages with filters: date range, unread only, limit, optional sync first.</dd>
-                        <dt>get_unread_emails</dt><dd>The unread ones, newest first.</dd>
-                        <dt>get_email_details</dt><dd>Full body, headers and the list of attachments.</dd>
-                        <dt>search_emails</dt><dd>By sender, subject, body, or all three.</dd>
-                        <dt>get_inbox_summary</dt><dd>Counts plus the senders you hear from most.</dd>
-                        <dt>daily_briefing</dt><dd>One day of mail, grouped and summarised.</dd>
+                        <dt>index</dt><dd>Indexes one PDF, several of them, or every PDF in a directory, into a corpus.</dd>
+                        <dt>sync</dt><dd>Indexes only what a directory has gained since last time, recognised by content hash.</dd>
+                        <dt>delete</dt><dd>Drops the collection of one PDF.</dd>
+                        <dt>delete-corpus</dt><dd>Drops a corpus, or a single document out of it.</dd>
                     </dl>
-                    <p>Writing mode (these need credentials):</p>
+                    <p>Asking questions:</p>
                     <dl class="tool-grid">
-                        <dt>sync_account</dt><dd>Runs mbsync for one account, with a timeout.</dd>
-                        <dt>move_email</dt><dd>Between two folders.</dd>
-                        <dt>archive_email</dt><dd>To the account&#8217;s archive folder, found on the server.</dd>
-                        <dt>delete_email</dt><dd>To trash, again whatever the provider calls it.</dd>
-                        <dt>cleanup_batch</dt><dd>Several deletes and archives over a single connection.</dd>
+                        <dt>ask</dt><dd>One question against a PDF or a corpus, answered from the retrieved passages.</dd>
+                        <dt>chat</dt><dd>The same, kept open across turns, with the conversation in context.</dd>
+                        <dt>summary</dt><dd>A structured summary of a whole document. Long ones are summarised in batches.</dd>
+                        <dt>search</dt><dd>BM25 keyword lookup, no model involved, results are instant.</dd>
                     </dl>
+                    <p>Looking at the machinery:</p>
+                    <dl class="tool-grid">
+                        <dt>profile</dt><dd>The layout metrics measured on a PDF and the parsing thresholds derived from them.</dd>
+                        <dt>cluster</dt><dd>Groups the profiled PDFs by layout similarity, with DBSCAN.</dd>
+                        <dt>inspect</dt><dd>The raw blocks the parser produced, for when a document comes apart badly.</dd>
+                    </dl>
+                    <p class="proj-note">Every command takes a PDF path or a corpus name in the same position, so the syntax is the same in both cases.</p>
                 </div>
                 <hr>
 
+
                 <div class="proj-block">
                     <div class="proj-h">Setting it up</div>
-                    <p>Linux or macOS; Python 3.10+; a working mbsync configuration; <code>mcp&gt;=1.0.0</code>;
-                        <code>keyring</code> (only if you want the write tools).</p>
-                    <p>Point your client at the server. In Claude Code, that is an entry
-                        in <code>.mcp.json</code>:</p>
-                    <div class="proj-code" style="margin-bottom: 10px;">{
-                    <span class="c-key">"mcpServers"</span>: {
-                        <span class="c-key">"mbsync"</span>: {
-                        <span class="c-key">"command"</span>: <span class="c-ok">"python3"</span>,
-                        <span class="c-key">"args"</span>: [<span class="c-ok">"/path/to/mbsync-mcp/server.py"</span>]
-                        }
-                    }
-                    }</div>
-                    <p>To enable move, archive and delete, store the password once. For Gmail
-                        this is an app password, not your account password:</p>
-                    <div class="proj-code" style="margin-bottom: 10px;">python -c <span class="c-ok">"import keyring; keyring.set_password('mbsync-mcp', 'email@gmail.com', 'app-password')"</span></div>
+                    <p>Python 3.10+ and the packages declared in <code>pyproject.toml</code>: pdfplumber for the PDFs, fastembed and sentence-transformers for the embeddings, chromadb to store them, rank-bm25 for the keyword search, scikit-learn for the clustering, and the two client libraries. An Anthropic API key is needed for the Claude backend. The local backend needs a running <a href="https://ollama.com">Ollama</a> on the machine.</p>
+                    <div class="proj-code" style="margin-bottom: 10px;">git clone https://github.com/leonardocppn/med-rag
+cd med-rag
+python3 -m venv venv <span class="c-dim">&amp;&amp;</span> source venv/bin/activate
+python -m pip install --upgrade pip
+pip install -e .
+cp .env.example .env</div>
+                    <p>Then index a folder and ask it something. The first run downloads the embedding model, about 50MB, from HuggingFace:</p>
+                    <div class="md-name">medrag index data/ <span class="flag">--corpus</span> reports
+medrag ask reports <span class="dim">"Has haemoglobin ever gone below range?"</span> <span class="flag">--rerank</span></div>
+                    <p class="md-legend"><code>--corpus</code> puts every PDF of the folder in one searchable collection, and a name is assigned automatically if you leave it out. <code>--rerank</code> passes the retrieved chunks through a cross-encoder before they reach the model. It costs about a second per question, and another 100MB the first time. <code>--model claude</code> sends the question and the retrieved passages to the API; without it the answer comes from the local model and nothing leaves the machine.</p>
                     <p>Source and instructions:
-                        <a href="https://github.com/leonardocppn/mbsync-mcp">github.com/leonardocppn/mbsync-mcp</a>
+                        <a href="https://github.com/leonardocppn/med-rag">github.com/leonardocppn/med-rag</a>
                         (MIT licence).</p>
                 </div>
                 <hr>
@@ -498,44 +579,49 @@
                 return el;
             }
 
-            // Il messaggio dell'utente, battuto a macchina
-            async function user(text, id) {
-                const el = add('&gt; <span class="cc-typed"></span><span class="cc-cursor">&#9611;</span>', 'cc-user');
+            // Il comando, battuto a macchina
+            async function prompt(text, id) {
+                const el = add('$ <span class="cc-typed"></span><span class="cc-cursor">&#9611;</span>', 'cc-user');
                 const typed = el.querySelector('.cc-typed');
                 const cursor = el.querySelector('.cc-cursor');
                 for (const ch of text) {
                     if (id !== run) return;
                     typed.textContent += ch;
                     out.scrollTop = out.scrollHeight;
-                    await wait(45);
+                    await wait(38);
                 }
                 cursor.remove();
             }
 
-            // Lo spinner con il contatore dei secondi
-            async function thinking(label, ms, id) {
+            // Lo spinner della CLI: \|/- e l'etichetta della fase
+            async function spin(label, ms, id) {
                 if (reduced) return;
-                const frames = ['\u273b', '\u2733', '\u2736', '\u2739'];
+                const frames = ['\\', '|', '/', '-'];
                 const el = add('', 'cc-dim cc-block');
                 const t0 = Date.now();
                 let i = 0;
                 while (Date.now() - t0 < ms) {
                     if (id !== run) { el.remove(); return; }
-                    const sec = Math.round((Date.now() - t0) / 1000);
-                    el.textContent = frames[i++ % frames.length] + ' ' + label + '\u2026 (' + sec + 's \u00b7 esc to interrupt)';
-                    await wait(150);
+                    el.textContent = frames[i++ % frames.length] + ' ' + label;
+                    await wait(120);
                 }
                 el.remove();
             }
 
-            // Una chiamata al server MCP e il suo risultato
-            async function tool(name, args, result, id) {
-                add('<span class="cc-dot">\u23fa</span> ' + name +
-                    ' <span class="cc-dim">(MCP)</span><span class="cc-arg">(' + args + ')</span>');
-                await wait(450);
-                if (id !== run) return;
-                add('  <span class="cc-dim">\u23bf</span>  ' + result, 'cc-block cc-res');
-                await wait(350);
+            // La risposta del modello, che arriva in streaming
+            async function answer(segments, id) {
+                const el = add('', 'cc-block');
+                for (const seg of segments) {
+                    const sp = document.createElement('span');
+                    if (seg.cls) sp.className = seg.cls;
+                    el.appendChild(sp);
+                    for (const word of seg.text.split(/(\s+)/)) {
+                        if (id !== run) return;
+                        sp.textContent += word;
+                        out.scrollTop = out.scrollHeight;
+                        if (word.trim()) await wait(40);
+                    }
+                }
             }
 
             async function play() {
@@ -543,37 +629,26 @@
                 out.innerHTML = '';
 
                 await wait(600);
-                await user('Morning. What did I miss yesterday?', id);
+                await prompt('medrag ask reports "Has haemoglobin ever gone below range?"', id);
                 if (id !== run) return;
-                await wait(500);
+                await wait(400);
 
-                await thinking('Checking', 1600, id);
-                if (id !== run) return;
-
-                await tool('mbsync - daily_briefing',
-                    'account: "email@gmail.com", date: "yesterday", auto_sync: true',
-                    '<span class="cc-ok">\u2705 Sync gmail completed</span> \u00b7 18 messages, 11 unread\n' +
-                    '     Top senders: LinkedIn (7), Substack (3), GitHub (2)\n' +
-                    '     <span class="cc-dim">\u2026 +14 lines (ctrl+r to expand)</span>', id);
+                add('Searching: <span class="cc-ok">\'Has haemoglobin ever gone below range?\'</span>', 'cc-block cc-res');
+                await wait(300);
                 if (id !== run) return;
 
-                await tool('mbsync - get_email_details',
-                    'account: "email@gmail.com", folder: "INBOX", index: 6',
-                    'From: Anthropic &lt;headquarters@anthropic.com&gt;\n' +
-                    '     Subject: Application for Anthropic CEO - next step\n' +
-                    '     <span class="cc-dim">\u2026 +12 lines (ctrl+r to expand)</span>', id);
+                await spin('Searching documents...', 1500, id);
+                if (id !== run) return;
+                await spin('LLM generating...', 1100, id);
                 if (id !== run) return;
 
-                await thinking('Reading', 1900, id);
-                if (id !== run) return;
-
-                add('<span class="cc-dot">\u23fa</span> Eighteen messages yesterday, and almost all of it was noise \u2014\n' +
-                    '  seven job alerts, three newsletters, some GitHub notifications.\n' +
-                    '  Two were written by a person, and one needs an answer:\n\n' +
-                    '  <span class="cc-hl">Anthropic</span> replied about the Anthropic CEO position.\n' +
-                    '  They propose a 45-minute technical interview and ask\n' +
-                    '  for three slots between Thursday and next Tuesday.\n\n' +
-                    '  The other is the landlord confirming Saturday \u2014 nothing to do.', 'cc-block');
+                await answer([
+                    { text: 'Haemoglobin appears in four of the indexed reports, and in two of them it sits below the reference range.\n\n' },
+                    { text: 'March 2023', cls: 'cc-hl' },
+                    { text: ', 11.4 g/dL against a range of 13 to 17 [page 2]. The same panel has ferritin at 18 ng/mL.\n' },
+                    { text: 'September 2023', cls: 'cc-hl' },
+                    { text: ', 12.2 g/dL [page 1].\n\nThe two later panels are inside the range, 14.1 g/dL in May 2024 and 14.8 g/dL in January 2025.' }
+                ], id);
             }
 
             if ('IntersectionObserver' in window) {
@@ -583,6 +658,200 @@
                     });
                 }, { threshold: 0.35 });
                 io.observe(win);
+            } else {
+                play();
+            }
+
+            replay.addEventListener('click', play);
+        })();
+    </script>
+
+    <script>
+        (function () {
+            const fig = document.querySelector('.rag-fig');
+            if (!fig) return;
+
+            const svg = fig.querySelector('.rag-svg');
+            const grid = svg.querySelector('.rag-grid');
+            const hitLayer = svg.querySelector('.rag-hits');
+            const counter = svg.querySelector('.rag-count');
+            const replay = document.querySelector('.rag-replay');
+            const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const NS = 'http://www.w3.org/2000/svg';
+
+            const RAMP = ['#155263', '#c5794f', '#3a8a91', '#b8552f', '#5fa3a3', '#c0a184', '#27707e', '#8fb3a6'];
+            const COLS = 31, ROWS = 6, PITCH = 12, SIDE = 8, X0 = 56, Y0 = 98;
+            const TOTAL = 1068;
+            // I chunk entrano un documento alla volta: ogni tratto contiguo e' un referto
+            const RUNS = [26, 22, 19, 28, 21, 24, 23, 23];
+            // Le cinque celle che la domanda accende, in cinque tratti diversi
+            const HITS = [[9, 0], [24, 1], [16, 2], [2, 4], [20, 5]];
+            const STAGES = ['s1', 's2', 's3', 's4', 's5'];
+
+            const wait = ms => new Promise(r => setTimeout(r, reduced ? 0 : ms));
+            const cellX = c => X0 + c * PITCH;
+            const cellY = r => Y0 + r * PITCH;
+            const docOf = [];
+            RUNS.forEach(function (len, doc) {
+                for (let k = 0; k < len; k++) docOf.push(doc);
+            });
+            const tint = (c, r) => docOf[r * COLS + c];
+            const docCentre = i => [113 + 34 * i + 8, 34];
+            const chunks = n => n.toLocaleString('en-US') + ' chunks';
+
+            // Una cella per quadratino. Quelle marcate "from" entrano volando dal loro PDF.
+            const cells = [];
+            const buckets = Array.from({ length: 8 }, () => []);
+            for (let r = 0; r < ROWS; r++) {
+                for (let c = 0; c < COLS; c++) {
+                    const rect = document.createElementNS(NS, 'rect');
+                    rect.setAttribute('x', cellX(c));
+                    rect.setAttribute('y', cellY(r));
+                    rect.setAttribute('width', SIDE);
+                    rect.setAttribute('height', SIDE);
+                    rect.setAttribute('rx', 1.5);
+                    rect.setAttribute('fill', RAMP[tint(c, r)]);
+                    rect.setAttribute('fill-opacity', 0.5);
+                    rect.setAttribute('class', 'rag-cell');
+                    grid.appendChild(rect);
+                    const doc = tint(c, r);
+                    const cell = { rect: rect, c: c, r: r, doc: doc, seq: buckets[doc].length, from: docCentre(doc) };
+                    cells.push(cell);
+                    buckets[doc].push(cell);
+                }
+            }
+
+            let run = 0;
+            let timers = [];
+
+            function later(fn, ms) {
+                timers.push(setTimeout(fn, reduced ? 0 : ms));
+            }
+
+            function stage(name) {
+                svg.classList.add(name);
+            }
+
+            function reset() {
+                timers.forEach(clearTimeout);
+                timers = [];
+                hitLayer.textContent = '';
+                svg.classList.add('staged');
+                STAGES.forEach(function (name) { svg.classList.remove(name); });
+                cells.forEach(function (cell) {
+                    cell.rect.classList.remove('on');
+                    cell.rect.style.transform = cell.from
+                        ? 'translate(' + (cell.from[0] - cellX(cell.c) - SIDE / 2) + 'px, '
+                          + (cell.from[1] - cellY(cell.r) - SIDE / 2) + 'px)'
+                        : '';
+                });
+                counter.textContent = chunks(0);
+            }
+
+            // Un documento alla volta, e dentro ognuno i chunk nell'ordine in cui sono stati letti
+            const DOC_GAP = 300, CHUNK_STEP = 11;
+
+            function fillGrid() {
+                cells.forEach(function (cell) {
+                    later(function () {
+                        cell.rect.style.transform = '';
+                        cell.rect.classList.add('on');
+                    }, 120 + cell.doc * DOC_GAP + cell.seq * CHUNK_STEP);
+                });
+            }
+
+            // Il contatore sale a scatti regolari, senza dipendere dai frame
+            function countUp(id) {
+                const steps = 44, span = 2500;
+                for (let i = 1; i <= steps; i++) {
+                    later(function () {
+                        if (id !== run) return;
+                        counter.textContent = chunks(Math.round((i / steps) * TOTAL));
+                    }, 120 + (span / steps) * i);
+                }
+            }
+
+            function makeHits() {
+                return HITS.map(function (pos) {
+                    const c = pos[0], r = pos[1];
+                    const rect = document.createElementNS(NS, 'rect');
+                    rect.setAttribute('x', cellX(c) - 1);
+                    rect.setAttribute('y', cellY(r) - 1);
+                    rect.setAttribute('width', SIDE + 2);
+                    rect.setAttribute('height', SIDE + 2);
+                    rect.setAttribute('rx', 2);
+                    rect.setAttribute('fill', RAMP[tint(c, r)]);
+                    rect.setAttribute('stroke', '#155263');
+                    rect.setAttribute('stroke-width', 1);
+                    rect.setAttribute('class', 'rag-hit');
+                    hitLayer.appendChild(rect);
+                    rect.getBoundingClientRect();
+                    rect.classList.add('on');
+                    return { rect: rect, c: c, r: r };
+                });
+            }
+
+            function dock(hits) {
+                hits.forEach(function (hit, i) {
+                    later(function () {
+                        hit.rect.style.transform =
+                            'translate(' + (318 + 16 * i - cellX(hit.c) + 1) + 'px, '
+                            + (214 - cellY(hit.r) + 1) + 'px)';
+                    }, i * 90);
+                });
+            }
+
+            async function play() {
+                const id = ++run;
+                reset();
+
+                if (reduced) {
+                    cells.forEach(function (cell) {
+                        cell.rect.style.transform = '';
+                        cell.rect.classList.add('on');
+                    });
+                    counter.textContent = chunks(TOTAL);
+                    dock(makeHits());
+                    STAGES.forEach(stage);
+                    return;
+                }
+
+                await wait(350);
+                if (id !== run) return;
+                stage('s1');
+
+                await wait(900);
+                if (id !== run) return;
+                stage('s2');
+                fillGrid();
+                countUp(id);
+
+                await wait(3000);
+                if (id !== run) return;
+                counter.textContent = chunks(TOTAL);
+                stage('s3');
+                const hits = makeHits();
+
+                await wait(1300);
+                if (id !== run) return;
+                stage('s4');
+
+                await wait(400);
+                if (id !== run) return;
+                dock(hits);
+
+                await wait(1100);
+                if (id !== run) return;
+                stage('s5');
+            }
+
+            if ('IntersectionObserver' in window) {
+                const io = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (e) {
+                        if (e.isIntersecting) { io.disconnect(); play(); }
+                    });
+                }, { threshold: 0.35 });
+                io.observe(fig);
             } else {
                 play();
             }

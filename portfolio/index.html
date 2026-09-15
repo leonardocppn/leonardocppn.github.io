@@ -95,23 +95,7 @@
                 </div>
                 <hr style="border: 0; border-top: 1px solid #000;margin-top: 0px;margin-bottom: 3px;">
                 A RAG pipeline for querying PDF documents in natural language, powered by Claude or any local model via Ollama. Designed as a tool to navigate archives of personal medical reports spanning years, but adaptable to any use case. Handles structured PDFs (lab reports, multi-column layouts) and plain narrative documents with adaptive layout analysis.<br>
-                <div class="med" style="font-size:14px">Show more...</div>
-                <div class="rag" style="align-items: center;display: none;gap:20px">
-                    <div style="box-sizing: border-box;text-align:left;">
-                        Main features:
-                        <ul style="margin: 5px;">
-                            <li>Adaptive layout parsing: parameters derived from each document's own metrics with no hardcoded thresholds. Classifies blocks as title, header, footer, or body. Detects multi-column layouts.</li>
-                            <li>Plain-text mode for narrative documents such as clinical notes, discharge letters (or any kind of single-column text document), where layout analysis is unnecessary.</li>
-                            <li>Multilingual embeddings via fastembed (ONNX, no GPU required), stored in ChromaDB.</li>
-                            <li>Optional cross-encoder re-ranking for more precise retrieval.</li>
-                            <li>Multi-document corpus: index multiple PDFs and query them together.</li>
-                            <li>Multi-turn chat and structured document summaries.</li>
-                            <li>Incremental sync: re-indexes only new files, with deduplication by content.</li>
-                            <li>BM25 keyword search for instant lookup (without an LLM).</li>
-                            <li>Dual LLM backend: Claude (Anthropic API) or any local model via Ollama.</li>
-                        </ul>
-                    </div>
-                </div>
+                <b>> <a style="margin: 0 2px;" href="../projects/medrag.html">See project page</a> < </b><br>
                 <br>
                 <div class="proj-title">
                     <span><b>mbsync mcp server</b></span>
@@ -119,7 +103,7 @@
                 </div>
                 <hr style="border: 0; border-top: 1px solid #000;margin-top: 0px;margin-bottom: 3px;">
                 A Model Context Protocol (MCP) server that allows you to locally sync and process your mailbox with the help of an LLM. It was born from the ashes of a project (which I might resume in the future) to manage Thunderbird <img src="imgs/tndrb.ico" style="width: 25px; border-radius:10%; box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3); vertical-align: middle;"> and was converted to work with mbsync.<br>
-                <b><a style="margin: 0 2px;" href="../projects/mbsyncmcp.html">See project page...</a></b><br>
+                <b>> <a style="margin: 0 2px;" href="../projects/mbsyncmcp.html">See project page</a> <</b><br>
                 <br>
                 <div class="proj-title">
                     <span><b>arXiv-pulse</b></span>
@@ -251,7 +235,6 @@
 
         setupToggle('.book-tracker', '.book-descr', 'flex');
         setupToggle('.marco', '.aurelio', 'block');
-        setupToggle('.med', '.rag', 'block');
         setupToggle('.tracker', '.spese', 'block');
         setupToggle('.arxiv', '.pulse', 'block');
     </script>
