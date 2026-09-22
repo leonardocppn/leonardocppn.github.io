@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Concordanze</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&display=swap">
+<style>
+  :root {
+    --paper: #f2f4f1;
+    --sheet: #fbfcfa;
+    --ink: #1a2030;
+    --ink-2: #545e70;
+    --ink-3: #7c8596;
+    --rule: #d5dad3;
+    --rule-strong: #b7beb6;
+    --accent: #23487f;
+    --accent-ink: #f6f8fc;
+    --accent-soft: #e2e9f4;
+    --mark: #fbe56c;
+    --warn: #8a5200;
+    --warn-soft: #f5e8d2;
+    --veil: rgba(242, 244, 241, 0.9);
+    --serif: "Literata", Georgia, "Times New Roman", serif;
+    --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #10141c;
+      --sheet: #171c27;
+      --ink: #e4e7ed;
+      --ink-2: #a0a9b9;
+      --ink-3: #7a8499;
+      --rule: #283042;
+      --rule-strong: #3b4559;
+      --accent: #92b4ec;
+      --accent-ink: #0f1522;
+      --accent-soft: #1d2a42;
+      --mark: rgba(238, 200, 60, 0.34);
+      --warn: #e2ab55;
+      --warn-soft: #3a2c16;
+      --veil: rgba(16, 20, 28, 0.9);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #10141c;
+    --sheet: #171c27;
+    --ink: #e4e7ed;
+    --ink-2: #a0a9b9;
+    --ink-3: #7a8499;
+    --rule: #283042;
+    --rule-strong: #3b4559;
+    --accent: #92b4ec;
+    --accent-ink: #0f1522;
+    --accent-soft: #1d2a42;
+    --mark: rgba(238, 200, 60, 0.34);
+    --warn: #e2ab55;
+    --warn-soft: #3a2c16;
+    --veil: rgba(16, 20, 28, 0.9);
+    color-scheme: dark;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font: 400 16px/1.55 var(--sans);
+  }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .vh {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap;
+  }
+
+  .page {
+    max-width: 46rem;
+    margin: 0 auto;
+    padding-inline: clamp(16px, 4vw, 32px);
+    padding-block: 48px 72px;
+    display: grid;
+    gap: 32px;
+  }
+
+  /* Testata: il titolo e la voce di dizionario */
+  .masthead h1 {
+    margin: 0;
+    font: 600 clamp(2.4rem, 7vw, 3.3rem)/1.02 var(--serif);
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+  .gloss {
+    margin: 12px 0 0;
+    font: 400 1.02rem/1.5 var(--serif);
+    color: var(--ink-2);
+  }
+  .gloss b { color: var(--ink); font-weight: 600; }
+  .gloss i { margin-inline: 0.2em 0.35em; }
+  .lede { margin: 14px 0 0; max-width: 38rem; color: var(--ink-2); }
+
+  /* Caricamento */
+  .load {
+    border: 1.5px dashed var(--rule-strong);
+    border-radius: 10px;
+    background: var(--sheet);
+    padding: 18px;
+    display: grid;
+    gap: 14px;
+  }
+  .load-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; }
+  .load-hint { color: var(--ink-3); font-size: 0.88rem; }
+
+  .btn {
+    font: 500 0.92rem/1.2 var(--sans);
+    padding: 9px 14px;
+    border-radius: 7px;
+    border: 1.5px solid var(--accent);
+    background: var(--accent);
+    color: var(--accent-ink);
+    cursor: pointer;
+  }
+  .btn:hover { filter: brightness(1.1); }
+  .btn.ghost { background: transparent; color: var(--accent); }
+  .btn.ghost:hover { background: var(--accent-soft); filter: none; }
+  .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .link {
+    background: none; border: 0; padding: 0;
+    font: inherit; color: var(--accent); cursor: pointer;
+    text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px;
+  }
+
+  .progress { display: grid; gap: 8px; }
+  .bar { height: 4px; border-radius: 2px; background: var(--rule); overflow: hidden; }
+  .bar span { display: block; height: 100%; width: 0; background: var(--accent); transition: width 0.2s linear; }
+  .progress-row { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; font-size: 0.85rem; }
+  .progress-text {
+    margin: 0; color: var(--ink-2);
+    font-family: var(--mono); font-size: 0.8rem;
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+  }
+  .notice {
+    margin: 0; padding: 10px 12px; border-radius: 7px;
+    background: var(--warn-soft); color: var(--warn);
+    font-size: 0.88rem;
+  }
+
+  /* Ricerca */
+  .search { display: grid; gap: 12px; }
+  #q {
+    width: 100%;
+    font: 400 1.22rem/1.3 var(--serif);
+    padding: 14px 16px;
+    border: 1.5px solid var(--ink-2);
+    border-radius: 8px;
+    background: var(--sheet);
+    color: var(--ink);
+  }
+  #q::placeholder { color: var(--ink-3); }
+  #q:focus { outline: 3px solid var(--accent-soft); border-color: var(--accent); }
+  .stats {
+    margin: 0; color: var(--ink-3);
+    font-family: var(--mono); font-size: 0.78rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 20px; font-size: 0.85rem; color: var(--ink-2); }
+  .ctl { display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  select {
+    font: 400 0.85rem var(--sans);
+    padding: 6px 8px;
+    border: 1px solid var(--rule-strong);
+    border-radius: 7px;
+    background: var(--sheet);
+    color: var(--ink);
+    max-width: 100%;
+  }
+  .seg { display: inline-flex; border: 1px solid var(--rule-strong); border-radius: 7px; overflow: hidden; }
+  .seg button {
+    font: 500 0.82rem var(--sans);
+    padding: 6px 10px;
+    border: 0;
+    background: transparent;
+    color: var(--ink-2);
+    cursor: pointer;
+  }
+  .seg button + button { border-left: 1px solid var(--rule-strong); }
+  .seg button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+
+  .help summary { cursor: pointer; color: var(--accent); font-size: 0.88rem; width: max-content; max-width: 100%; }
+  .help dl {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 10px 18px;
+    margin: 14px 0 0;
+    font-size: 0.9rem;
+  }
+  .help dt { margin: 0; }
+  .help dd { margin: 0; color: var(--ink-2); }
+  code {
+    font-family: var(--mono); font-size: 0.84rem;
+    background: var(--accent-soft); color: var(--ink);
+    padding: 2px 6px; border-radius: 4px;
+    white-space: nowrap;
+  }
+  .help .foot { margin: 14px 0 0; font-size: 0.9rem; color: var(--ink-2); }
+
+  /* Risultati */
+  .out { display: grid; gap: 4px; }
+  .summary {
+    margin: 0 0 8px;
+    color: var(--ink-2);
+    font-size: 0.9rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .summary strong { color: var(--ink); font-weight: 600; }
+  .results { list-style: none; margin: 0; padding: 0; }
+  .hit {
+    border-top: 1px solid var(--rule);
+    padding-block: 18px;
+    display: grid;
+    gap: 8px;
+  }
+  .ref { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px; }
+  .ref .doc { font-weight: 600; overflow-wrap: anywhere; }
+  .ref .pg { font-family: var(--mono); font-size: 0.85rem; color: var(--accent); white-space: nowrap; }
+  .ref .dir { font-size: 0.8rem; color: var(--ink-3); overflow-wrap: anywhere; }
+  .snip {
+    margin: 0;
+    font: 400 1.05rem/1.68 var(--serif);
+    overflow-wrap: break-word;
+  }
+  mark {
+    color: inherit;
+    background: linear-gradient(180deg, transparent 10%, var(--mark) 10%, var(--mark) 90%, transparent 90%);
+    padding: 0 0.1em;
+    border-radius: 2px;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+  .acts {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px;
+    font-size: 0.82rem; color: var(--ink-3);
+    font-variant-numeric: tabular-nums;
+  }
+  .more { justify-self: start; margin-top: 12px; }
+
+  /* Elenco documenti */
+  .docs { border-top: 1px solid var(--rule); padding-top: 16px; }
+  .docs summary { cursor: pointer; font-weight: 500; }
+  .doc-list { list-style: none; padding: 0; margin: 14px 0 16px; display: grid; gap: 8px; font-size: 0.88rem; }
+  .doc-list li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; }
+  .dname { overflow-wrap: anywhere; }
+  .ddir { color: var(--ink-3); font-size: 0.8rem; overflow-wrap: anywhere; }
+  .dmeta { font-family: var(--mono); font-size: 0.78rem; color: var(--ink-3); white-space: nowrap; }
+  .chip {
+    font-size: 0.74rem; padding: 1px 8px; border-radius: 999px;
+    background: var(--warn-soft); color: var(--warn);
+  }
+
+  /* Come funziona */
+  .about { border-top: 1px solid var(--rule); padding-top: 20px; color: var(--ink-2); font-size: 0.92rem; }
+  .about h2 { margin: 0 0 10px; font: 600 1.1rem/1.3 var(--serif); color: var(--ink); }
+  .about p { margin: 0 0 10px; max-width: 40rem; }
+
+  /* Trascinamento */
+  .overlay {
+    position: fixed; inset: 0; z-index: 10;
+    display: grid; place-items: center;
+    background: var(--veil);
+    pointer-events: none;
+    padding: 16px;
+  }
+  .overlay p {
+    margin: 0;
+    padding: 28px 36px;
+    border: 2px dashed var(--accent);
+    border-radius: 14px;
+    background: var(--sheet);
+    color: var(--accent);
+    font: 500 1.35rem/1.3 var(--serif);
+    text-align: center;
+  }
+
+  @media (max-width: 540px) {
+    .help dl { grid-template-columns: 1fr; gap: 4px; }
+    .help dd { margin-bottom: 10px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bar span { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="overlay" class="overlay" hidden><p>Rilascia per aggiungere i PDF</p></div>
+
+<main class="page">
+  <header class="masthead">
+    <h1>Concordanze</h1>
+    <p class="gloss"><b>concordanze</b><i>s.f. pl.</i>Indice delle parole di un testo, ciascuna con i passi in cui compare.</p>
+    <p class="lede">Qui il testo è una raccolta di PDF. Carica una cartella e cerca una parola, oppure una citazione tra virgolette: per ogni risultato hai il file e la pagina. I PDF restano sul tuo computer.</p>
+  </header>
+
+  <section id="dropzone" class="load" aria-label="Carica i PDF">
+    <div class="load-row">
+      <button type="button" class="btn" id="pick-folder">Scegli una cartella</button>
+      <button type="button" class="btn ghost" id="pick-files">Scegli dei PDF</button>
+      <span class="load-hint">oppure trascinali qui, anche cartelle intere con le sottocartelle</span>
+    </div>
+    <input type="file" id="in-folder" webkitdirectory multiple hidden>
+    <input type="file" id="in-files" accept=".pdf,application/pdf" multiple hidden>
+    <div id="progress" class="progress" hidden>
+      <div class="bar" aria-hidden="true"><span id="bar-fill"></span></div>
+      <div class="progress-row">
+        <p id="progress-text" class="progress-text"></p>
+        <button type="button" class="link" id="cancel">Interrompi</button>
+      </div>
+    </div>
+    <p id="notice" class="notice" hidden></p>
+  </section>
+
+  <section class="search" aria-label="Ricerca">
+    <label for="q" class="vh">Cerca nei PDF</label>
+    <input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="parole, &quot;frase esatta&quot;, prefisso*">
+    <p id="stats" class="stats"></p>
+    <div class="controls">
+      <label class="ctl" id="scope-wrap" hidden>Cerca in <select id="scope"></select></label>
+      <div class="ctl">Ordina
+        <div class="seg" role="group" aria-label="Ordina i risultati">
+          <button type="button" data-sort="score" aria-pressed="true">per pertinenza</button>
+          <button type="button" data-sort="doc" aria-pressed="false">come nei documenti</button>
+        </div>
+      </div>
+    </div>
+    <details class="help">
+      <summary>Come si scrive una ricerca</summary>
+      <dl>
+        <dt><code>selva oscura</code></dt>
+        <dd>Le pagine che contengono queste parole, le più pertinenti per prime. Non serve che ci siano tutte.</dd>
+        <dt><code>"selva oscura"</code></dt>
+        <dd>Solo le pagine dove le parole compaiono una dopo l'altra, in quest'ordine. È il modo per ritrovare una citazione.</dd>
+        <dt><code>pensier*</code></dt>
+        <dd>Tutte le parole che cominciano così: pensiero, pensieri, pensierosa.</dd>
+        <dt><code>"selva oscura" paura</code></dt>
+        <dd>La frase deve esserci; le altre parole servono solo a ordinare i risultati.</dd>
+      </dl>
+      <p class="foot">Maiuscole, accenti, punteggiatura e ritorni a capo non contano: <i>perché</i> e <i>perche</i> sono la stessa parola.</p>
+    </details>
+  </section>
+
+  <section class="out" aria-label="Risultati">
+    <p id="summary" class="summary" aria-live="polite"></p>
+    <ol id="results" class="results"></ol>
+    <button type="button" id="more" class="btn ghost more" hidden></button>
+  </section>
+
+  <details id="docs" class="docs">
+    <summary id="docs-title">Documenti</summary>
+    <ul id="doc-list" class="doc-list"></ul>
+    <button type="button" class="btn ghost" id="clear">Svuota tutto</button>
+  </details>
+
+  <section class="about">
+    <h2>Come funziona</h2>
+    <p>Ogni pagina di ogni PDF conta come un testo a sé, quindi i risultati sono pagine, con il numero da citare.</p>
+    <p>Le parole libere sono ordinate con BM25, il criterio dei motori di ricerca classici: pesa di più una parola rara nella raccolta, ripetuta più volte nella pagina, in una pagina non troppo lunga.</p>
+    <p>Le frasi tra virgolette invece devono comparire parola per parola. Le parole spezzate col trattino a fine riga vengono ricomposte, così una citazione si trova anche quando nel PDF va a capo.</p>
+    <p>Limiti: legge solo il testo che nel PDF si può selezionare, quindi le scansioni vanno prima passate a un programma di OCR (riconoscimento del testo). Serve internet per scaricare pdf.js, la libreria che apre i PDF, ma i file non vengono inviati da nessuna parte. Chiusa la pagina l'indice si perde, e la volta dopo i PDF vanno ricaricati.</p>
+  </section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+(() => {
+  'use strict';
+
+  const PDFJS = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';
+  const CMAPS = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/cmaps/';
+  const K1 = 1.2, B = 0.75;   // parametri di BM25: saturazione della frequenza, peso della lunghezza
+  const PAGE_SIZE = 25;       // risultati mostrati per volta
+  const SNIP = 320;           // lunghezza indicativa dell'estratto, in caratteri
+
+  if (window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS + 'pdf.worker.min.js';
+
+  const $ = (id) => document.getElementById(id);
+  const el = {
+    overlay: $('overlay'), pickFolder: $('pick-folder'), pickFiles: $('pick-files'),
+    inFolder: $('in-folder'), inFiles: $('in-files'),
+    progress: $('progress'), barFill: $('bar-fill'), progressText: $('progress-text'), cancel: $('cancel'),
+    notice: $('notice'), q: $('q'), stats: $('stats'), scopeWrap: $('scope-wrap'), scope: $('scope'),
+    summary: $('summary'), results: $('results'), more: $('more'),
+    docs: $('docs'), docsTitle: $('docs-title'), docList: $('doc-list'), clear: $('clear'),
+  };
+
+  const nf = new Intl.NumberFormat('it-IT');
+  const sf = new Intl.NumberFormat('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const collator = new Intl.Collator('it', { numeric: true, sensitivity: 'base' });
+  const pl = (n, one, many) => `${nf.format(n)} ${n === 1 ? one : many}`;
+  const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  const state = {
+    files: [],          // { name, dir, file, pages, empty, error, url }
+    pages: [],          // { f, n, text, len }
+    index: new Map(),   // parola -> { p: [id pagina], tf: [occorrenze nella pagina] }
+    totalLen: 0,
+    seen: new Set(),
+    queue: [],
+    busy: false,
+    cancel: false,
+    report: { notPdf: 0, dup: 0, cancelled: 0 },
+    prog: { done: 0, total: 0, name: '', page: 0, pages: 0 },
+  };
+  const view = { parsed: null, results: [], scope: '*', sort: 'score', shown: PAGE_SIZE, ms: 0 };
+  const plainByPid = new Map();
+
+  // ── Parole ────────────────────────────────────────────────────────────────
+
+  const WORD_RAW = /[\p{L}\p{M}\p{N}]+/gu;
+  const WORD = /[\p{L}\p{N}]+/gu;
+  const ASCII = /^[\x00-\x7f]*$/;
+
+  // Minuscole, senza accenti, legature sciolte (ﬁ → fi)
+  function fold(s) {
+    if (ASCII.test(s)) return s.toLowerCase();
+    return s.normalize('NFKD').replace(/\p{M}+/gu, '').toLowerCase();
+  }
+
+  // Chiama fn(parola, inizio, fine) per ogni parola, con le posizioni nel testo originale.
+  // Indice, ricerca ed evidenziazione passano tutti da qui, così vedono le stesse parole.
+  function eachToken(text, fn) {
+    for (const m of text.matchAll(WORD_RAW)) {
+      const s = m.index, e = s + m[0].length;
+      if (ASCII.test(m[0])) { fn(m[0].toLowerCase(), s, e); continue; }
+      const parts = fold(m[0]).match(WORD);
+      if (parts) for (const p of parts) fn(p, s, e);
+    }
+  }
+
+  // Unisce i pezzi di testo di una pagina come fa la ricerca di Firefox,
+  // poi ricompone le parole spezzate dal trattino a fine riga.
+  function pageText(items) {
+    const parts = [];
+    for (const it of items) {
+      if (typeof it.str !== 'string') continue;
+      parts.push(it.str);
+      if (it.hasEOL) parts.push('\n');
+    }
+    return parts.join('')
+      .replace(/(\p{L})[-­‐]\s*\n\s*(\p{Ll})/gu, '$1$2')
+      .replace(/­/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  // ── Indice ────────────────────────────────────────────────────────────────
+
+  function addPage(f, n, text) {
+    const pid = state.pages.length;
+    const counts = new Map();
+    let len = 0;
+    eachToken(text, (t) => { counts.set(t, (counts.get(t) || 0) + 1); len++; });
+    for (const [t, c] of counts) {
+      let post = state.index.get(t);
+      if (!post) { post = { p: [], tf: [] }; state.index.set(t, post); }
+      post.p.push(pid);
+      post.tf.push(c);
+    }
+    state.pages.push({ f, n, text, len });
+    state.totalLen += len;
+    return len;
+  }
+
+  function clearAll() {
+    for (const f of state.files) if (f.url) URL.revokeObjectURL(f.url);
+    state.files = [];
+    state.pages = [];
+    state.index = new Map();
+    state.totalLen = 0;
+    state.seen = new Set();
+    view.scope = '*';
+    // I risultati puntano a pagine che non esistono più
+    view.parsed = null;
+    view.results = [];
+  }
+
+  // ── Ricerca ───────────────────────────────────────────────────────────────
+
+  function parseQuery(raw) {
+    const q = raw.replace(/[“”„«»]/g, '"');
+    const phrases = [], terms = [];
+    const seenP = new Set(), seenT = new Set();
+    for (const m of q.matchAll(/"([^"]*)"?|([^\s"]+)/g)) {
+      const seq = [];
+      if (m[1] !== undefined) {
+        eachToken(m[1], (t) => seq.push(t));
+        const key = seq.join(' ');
+        if (seq.length && !seenP.has(key)) { seenP.add(key); phrases.push(seq); }
+      } else {
+        eachToken(m[2], (t) => seq.push(t));
+        const star = m[2].endsWith('*');
+        seq.forEach((t, i) => {
+          const prefix = star && i === seq.length - 1 && t.length >= 2;
+          const key = (prefix ? '*' : '=') + t;
+          if (!seenT.has(key)) { seenT.add(key); terms.push({ t, prefix }); }
+        });
+      }
+    }
+    return { phrases, terms };
+  }
+
+  function postings(term) {
+    if (!term.prefix) return state.index.get(term.t) || null;
+    const acc = new Map();
+    for (const [t, post] of state.index) {
+      if (!t.startsWith(term.t)) continue;
+      for (let i = 0; i < post.p.length; i++) acc.set(post.p[i], (acc.get(post.p[i]) || 0) + post.tf[i]);
+    }
+    if (!acc.size) return null;
+    const p = [...acc.keys()].sort((a, b) => a - b);
+    return { p, tf: p.map((k) => acc.get(k)) };
+  }
+
+  function scopeOK(f) {
+    const s = view.scope;
+    if (s === '*') return true;
+    if (s === '**') return !f.dir;
+    return f.dir === s || f.dir.startsWith(s + '/');
+  }
+  const inScope = (pid) => scopeOK(state.files[state.pages[pid].f]);
+
+  // Trova nel testo le frasi e le parole cercate: eventi { i, j, key } sugli indici delle parole
+  function analyze(text, P) {
+    const toks = [];
+    eachToken(text, (t, s, e) => toks.push({ t, s, e }));
+    const events = [];
+    P.phrases.forEach((seq, k) => {
+      const L = seq.length;
+      for (let i = 0; i + L <= toks.length; i++) {
+        let j = 0;
+        while (j < L && toks[i + j].t === seq[j]) j++;
+        if (j === L) events.push({ i, j: i + L - 1, key: 'f' + k });
+      }
+    });
+    if (P.terms.length) {
+      toks.forEach((tok, i) => {
+        for (const term of P.terms) {
+          if (term.prefix ? tok.t.startsWith(term.t) : tok.t === term.t) {
+            events.push({ i, j: i, key: (term.prefix ? '*' : '=') + term.t });
+            break;
+          }
+        }
+      });
+    }
+    events.sort((a, b) => a.i - b.i || b.j - a.j);
+    return { toks, events };
+  }
+
+  function searchPages(P) {
+    const N = state.pages.length;
+    if (!N) return [];
+    const avgdl = state.totalLen / N || 1;
+
+    // Contano per il punteggio sia le parole libere sia quelle delle frasi
+    const keys = new Map();
+    for (const t of P.terms) keys.set((t.prefix ? '*' : '=') + t.t, t);
+    for (const seq of P.phrases) for (const t of seq) keys.set('=' + t, { t, prefix: false });
+
+    const score = new Float64Array(N);
+    const seen = new Uint8Array(N);
+    const touched = [];
+    const posts = new Map();
+    for (const [key, term] of keys) {
+      const post = postings(term);
+      posts.set(key, post);
+      if (!post) continue;
+      const df = post.p.length;
+      const idf = Math.log(1 + (N - df + 0.5) / (df + 0.5));
+      for (let i = 0; i < df; i++) {
+        const pid = post.p[i], tf = post.tf[i];
+        const dl = state.pages[pid].len;
+        score[pid] += idf * tf * (K1 + 1) / (tf + K1 * (1 - B + B * dl / avgdl));
+        if (!seen[pid]) { seen[pid] = 1; touched.push(pid); }
+      }
+    }
+
+    if (!P.phrases.length) {
+      return touched.filter(inScope).map((pid) => ({ pid, score: score[pid], occ: 0 }));
+    }
+
+    // Con le frasi: prima le pagine che hanno tutte le loro parole, poi la verifica dell'ordine
+    const need = [...new Set(P.phrases.flat())].map((t) => posts.get('=' + t));
+    if (need.some((p) => !p)) return [];
+    need.sort((a, b) => a.p.length - b.p.length);
+    let cand = need[0].p.filter(inScope);
+    for (const post of need.slice(1)) {
+      if (!cand.length) break;
+      const s = new Set(post.p);
+      cand = cand.filter((pid) => s.has(pid));
+    }
+    const out = [];
+    const onlyPhrases = { phrases: P.phrases, terms: [] };
+    for (const pid of cand) {
+      const { events } = analyze(state.pages[pid].text, onlyPhrases);
+      if (new Set(events.map((e) => e.key)).size < P.phrases.length) continue;
+      out.push({ pid, score: score[pid], occ: events.length });
+    }
+    return out;
+  }
+
+  function sortResults() {
+    if (view.sort === 'doc') view.results.sort((a, b) => a.pid - b.pid);
+    else view.results.sort((a, b) => b.score - a.score || a.pid - b.pid);
+  }
+
+  function runSearch() {
+    view.shown = PAGE_SIZE;
+    const P = parseQuery(el.q.value);
+    if (!P.phrases.length && !P.terms.length) {
+      view.parsed = null;
+      view.results = [];
+      render();
+      return;
+    }
+    const t0 = performance.now();
+    view.parsed = P;
+    view.results = searchPages(P);
+    view.ms = performance.now() - t0;
+    sortResults();
+    render();
+  }
+
+  // ── Estratti ──────────────────────────────────────────────────────────────
+
+  // La finestra di testo che contiene più termini diversi della ricerca
+  function bestWindow(events, toks) {
+    const cnt = new Map();
+    let lo = 0, best = [0, 0], bestScore = -1;
+    for (let hi = 0; hi < events.length; hi++) {
+      const k = events[hi].key;
+      cnt.set(k, (cnt.get(k) || 0) + 1);
+      while (lo < hi && toks[events[hi].j].e - toks[events[lo].i].s > SNIP * 0.8) {
+        const kl = events[lo].key, c = cnt.get(kl) - 1;
+        if (c) cnt.set(kl, c); else cnt.delete(kl);
+        lo++;
+      }
+      const sc = cnt.size * 1e4 + (hi - lo);
+      if (sc > bestScore) { bestScore = sc; best = [lo, hi]; }
+    }
+    return best;
+  }
+
+  function snippet(text, toks, events) {
+    if (!events.length) {
+      const plain = text.slice(0, SNIP);
+      return { html: esc(plain) + (text.length > SNIP ? ' …' : ''), plain };
+    }
+    const [lo, hi] = bestWindow(events, toks);
+    const a = toks[events[lo].i].s;
+    let b = a;
+    for (let k = lo; k <= hi; k++) b = Math.max(b, toks[events[k].j].e);
+    b = Math.min(b, a + SNIP);
+
+    const pad = (SNIP - (b - a)) / 2;
+    let start = Math.max(0, Math.floor(a - pad));
+    let end = Math.min(text.length, Math.ceil(b + pad));
+    if (start === 0) end = Math.min(text.length, Math.max(end, SNIP));
+    if (end === text.length) start = Math.max(0, Math.min(start, text.length - SNIP));
+    if (start > 0) { const k = text.indexOf(' ', start); if (k !== -1 && k < a) start = k + 1; }
+    if (end < text.length) { const k = text.lastIndexOf(' ', end); if (k > b) end = k; }
+
+    // Tratti da evidenziare: parole vicine separate solo da spazi diventano un tratto unico
+    const ranges = [];
+    for (const ev of events) {
+      const s = Math.max(toks[ev.i].s, start), e = Math.min(toks[ev.j].e, end);
+      if (e <= s) continue;
+      const last = ranges[ranges.length - 1];
+      if (last && (s <= last[1] || /^\s+$/.test(text.slice(last[1], s)))) last[1] = Math.max(last[1], e);
+      else ranges.push([s, e]);
+    }
+    let html = start > 0 ? '… ' : '';
+    let pos = start;
+    for (const [s, e] of ranges) {
+      html += esc(text.slice(pos, s)) + '<mark>' + esc(text.slice(s, e)) + '</mark>';
+      pos = e;
+    }
+    html += esc(text.slice(pos, end)) + (end < text.length ? ' …' : '');
+    return { html, plain: text.slice(start, end) };
+  }
+
+  // ── Disegno ───────────────────────────────────────────────────────────────
+
+  function hitHTML(r) {
+    const page = state.pages[r.pid], f = state.files[page.f], P = view.parsed;
+    const { toks, events } = analyze(page.text, P);
+    const sn = snippet(page.text, toks, events);
+    plainByPid.set(r.pid, sn.plain);
+    const occ = P.phrases.length ? r.occ : events.length;
+    return `<li class="hit">
+      <div class="ref"><span class="doc">${esc(f.name)}</span><span class="pg">p. ${page.n}</span>${f.dir ? `<span class="dir">${esc(f.dir)}</span>` : ''}</div>
+      <p class="snip">${sn.html}</p>
+      <div class="acts">
+        <span>${pl(occ, 'occorrenza', 'occorrenze')} · pertinenza ${sf.format(r.score)}</span>
+        ${f.file ? `<button type="button" class="link" data-act="open" data-pid="${r.pid}">Apri a p. ${page.n}</button>` : ''}
+        <button type="button" class="link" data-act="copy" data-pid="${r.pid}">Copia citazione</button>
+      </div>
+    </li>`;
+  }
+
+  function drawSummary() {
+    const P = view.parsed, res = view.results;
+    if (!P) {
+      el.summary.textContent = state.pages.length ? '' : 'Carica dei PDF per cominciare.';
+      return;
+    }
+    if (!state.pages.length) {
+      el.summary.textContent = 'Carica dei PDF per cominciare.';
+      return;
+    }
+    if (!res.length) {
+      const hint = P.phrases.length
+        ? 'Controlla la frase, oppure togli le virgolette per cercare le parole anche separate.'
+        : "Prova con altre parole, o con l'asterisco per le varianti: citazion* trova citazione e citazioni.";
+      el.summary.innerHTML = `<strong>Nessuna pagina trovata.</strong> ${hint}`;
+      return;
+    }
+    const docs = new Set(res.map((r) => state.pages[r.pid].f)).size;
+    let s = `${pl(res.length, 'pagina', 'pagine')} in ${pl(docs, 'documento', 'documenti')}`;
+    if (P.phrases.length) {
+      const occ = res.reduce((a, r) => a + r.occ, 0);
+      s = `${pl(occ, 'occorrenza', 'occorrenze')} ${P.phrases.length > 1 ? 'delle frasi' : 'della frase'}, ${s}`;
+    }
+    s += ` · ${nf.format(Math.max(1, Math.round(view.ms)))} ms`;
+    if (state.busy) s += ' · sto ancora leggendo i PDF';
+    el.summary.innerHTML = `<strong>${s}</strong>`;
+  }
+
+  function render() {
+    drawSummary();
+    plainByPid.clear();
+    const res = view.results;
+    el.results.innerHTML = view.parsed ? res.slice(0, view.shown).map(hitHTML).join('') : '';
+    const rest = res.length - view.shown;
+    el.more.hidden = !view.parsed || rest <= 0;
+    if (rest > 0) el.more.textContent = `Mostra altri ${nf.format(Math.min(PAGE_SIZE, rest))} (ne restano ${nf.format(rest)})`;
+  }
+
+  function drawStats() {
+    if (!state.files.length) { el.stats.textContent = 'Nessun PDF caricato.'; return; }
+    el.stats.textContent = `${pl(state.files.length, 'documento', 'documenti')} · ${pl(state.pages.length, 'pagina', 'pagine')} · ${pl(state.totalLen, 'parola', 'parole')}`;
+  }
+
+  function drawDocs() {
+    const n = state.files.length;
+    el.docs.hidden = n === 0;
+    el.clear.disabled = state.busy;
+    el.docsTitle.textContent = `Documenti caricati (${nf.format(n)})`;
+    el.docList.innerHTML = state.files.map((f) => {
+      const chips = [];
+      if (f.error) chips.push(f.error);
+      else if (f.pages && f.empty === f.pages) chips.push('nessun testo: forse è una scansione');
+      else if (f.empty > f.pages / 2) chips.push('molte pagine senza testo');
+      return `<li><span class="dname">${esc(f.name)}</span>${f.dir ? `<span class="ddir">${esc(f.dir)}</span>` : ''}<span class="dmeta">${pl(f.pages, 'pagina', 'pagine')}</span>${chips.map((c) => `<span class="chip">${esc(c)}</span>`).join('')}</li>`;
+    }).join('');
+  }
+
+  function drawScope() {
+    const counts = new Map();
+    let loose = 0;
+    for (const f of state.files) {
+      if (!f.dir) { loose++; continue; }
+      const parts = f.dir.split('/');
+      for (let i = 1; i <= parts.length; i++) {
+        const d = parts.slice(0, i).join('/');
+        counts.set(d, (counts.get(d) || 0) + 1);
+      }
+    }
+    const dirs = [...counts.keys()].sort(collator.compare);
+    const opts = [['*', `tutta la raccolta (${nf.format(state.files.length)})`]];
+    for (const d of dirs) opts.push([d, `${d} (${nf.format(counts.get(d))})`]);
+    if (loose && dirs.length) opts.push(['**', `file caricati singolarmente (${nf.format(loose)})`]);
+    const useful = dirs.length + (loose ? 1 : 0) > 1;
+    el.scopeWrap.hidden = !useful;
+    if (!useful || !opts.some(([v]) => v === view.scope)) view.scope = '*';
+    el.scope.replaceChildren(...opts.map(([v, label]) => new Option(label, v, false, v === view.scope)));
+  }
+
+  function refreshMeta() {
+    drawStats();
+    drawDocs();
+    drawScope();
+  }
+
+  // ── Lettura dei PDF ───────────────────────────────────────────────────────
+
+  function splitPath(path) {
+    const i = path.lastIndexOf('/');
+    return i < 0 ? { dir: '', name: path } : { dir: path.slice(0, i), name: path.slice(i + 1) };
+  }
+
+  function ingest(list) {
+    if (!list.length) return;
+    if (!state.busy) state.report = { notPdf: 0, dup: 0, cancelled: 0 };
+    const pdfs = list.filter((x) => /\.pdf$/i.test(x.path) || x.file.type === 'application/pdf');
+    state.report.notPdf += list.length - pdfs.length;
+    if (!pdfs.length) { showReport(); return; }
+    if (!window.pdfjsLib) {
+      el.notice.textContent = 'Non riesco a caricare pdf.js, la libreria che legge i PDF: serve la connessione a internet. Controlla la rete e ricarica la pagina.';
+      el.notice.hidden = false;
+      return;
+    }
+    const fresh = [];
+    for (const x of pdfs) {
+      const key = `${x.path}|${x.file.size}|${x.file.lastModified}`;
+      if (state.seen.has(key)) { state.report.dup++; continue; }
+      state.seen.add(key);
+      fresh.push(x);
+    }
+    if (!fresh.length) { refreshMeta(); runSearch(); showReport(); return; }
+    fresh.sort((a, b) => collator.compare(a.path, b.path));
+    if (!state.busy) state.prog = { done: 0, total: 0, name: '', page: 0, pages: 0 };
+    state.queue.push(...fresh);
+    state.prog.total += fresh.length;
+    if (!state.busy) runQueue();
+  }
+
+  async function runQueue() {
+    state.busy = true;
+    state.cancel = false;
+    el.progress.hidden = false;
+    el.notice.hidden = true;
+    refreshMeta();
+    render();
+    while (state.queue.length && !state.cancel) {
+      const x = state.queue.shift();
+      const { dir, name } = splitPath(x.path);
+      const rec = { name, dir, file: x.file, pages: 0, empty: 0, error: '', url: '' };
+      const fi = state.files.push(rec) - 1;
+      Object.assign(state.prog, { name, page: 0, pages: 0 });
+      tick();
+      let doc = null;
+      try {
+        const data = new Uint8Array(await x.file.arrayBuffer());
+        doc = await pdfjsLib.getDocument({
+          data, cMapUrl: CMAPS, cMapPacked: true,
+          isEvalSupported: false, disableFontFace: true, verbosity: 0,
+        }).promise;
+        rec.pages = doc.numPages;
+        state.prog.pages = doc.numPages;
+        for (let n = 1; n <= doc.numPages; n++) {
+          if (state.cancel) { rec.error = 'lettura interrotta'; break; }
+          const page = await doc.getPage(n);
+          const tc = await page.getTextContent();
+          if (addPage(fi, n, pageText(tc.items)) < 3) rec.empty++;
+          page.cleanup();
+          state.prog.page = n;
+          tick();
+        }
+      } catch (err) {
+        rec.error = err && err.name === 'PasswordException' ? 'protetto da password' : 'non si riesce ad aprire';
+      } finally {
+        if (doc) doc.destroy();
+      }
+      state.prog.done++;
+      tick();
+    }
+    if (state.cancel) {
+      state.report.cancelled += state.queue.length;
+      state.queue.length = 0;
+    }
+    state.busy = false;
+    state.cancel = false;
+    el.progress.hidden = true;
+    refreshMeta();
+    runSearch();
+    showReport();
+  }
+
+  let frame = 0;
+  function tick() {
+    if (frame) return;
+    frame = requestAnimationFrame(() => {
+      frame = 0;
+      const p = state.prog;
+      const frac = p.total ? (p.done + (p.pages ? p.page / p.pages : 0)) / p.total : 0;
+      el.barFill.style.width = (Math.min(1, frac) * 100).toFixed(1) + '%';
+      const now = Math.min(p.done + 1, p.total);
+      el.progressText.textContent = `Leggo il file ${nf.format(now)} di ${nf.format(p.total)} · ${p.name}` +
+        (p.pages ? ` · pagina ${nf.format(p.page)} di ${nf.format(p.pages)}` : '');
+      drawStats();
+      drawDocs();
+    });
+  }
+
+  function showReport() {
+    const r = state.report, parts = [];
+    const noText = state.files.filter((f) => !f.error && f.pages && f.empty === f.pages).length;
+    const broken = state.files.filter((f) => f.error && f.error !== 'lettura interrotta').length;
+    if (noText) parts.push(`${pl(noText, 'PDF non ha testo', 'PDF non hanno testo')}: ${noText === 1 ? 'forse è una scansione' : 'forse sono scansioni'}, da passare prima all'OCR`);
+    if (broken) parts.push(pl(broken, 'PDF non si apre', 'PDF non si aprono'));
+    if (r.dup) parts.push(pl(r.dup, 'file era già caricato', 'file erano già caricati'));
+    if (r.notPdf) parts.push(pl(r.notPdf, 'file non è un PDF ed è stato saltato', 'file non sono PDF e sono stati saltati'));
+    if (r.cancelled) parts.push(`lettura interrotta, ${pl(r.cancelled, 'file non letto', 'file non letti')}`);
+    el.notice.hidden = !parts.length;
+    el.notice.textContent = parts.length
+      ? parts.join(' · ') + ((noText || broken) ? ". L'elenco dei documenti, in fondo, dice quali." : '.')
+      : '';
+  }
+
+  // ── Trascinamento e scelta dei file ───────────────────────────────────────
+
+  async function walk(entry, out) {
+    try {
+      if (entry.isFile) {
+        const file = await new Promise((res, rej) => entry.file(res, rej));
+        out.push({ file, path: entry.fullPath.replace(/^\/+/, '') });
+      } else if (entry.isDirectory) {
+        const reader = entry.createReader();
+        for (;;) {
+          const batch = await new Promise((res, rej) => reader.readEntries(res, rej));
+          if (!batch.length) break;
+          for (const e of batch) await walk(e, out);
+        }
+      }
+    } catch (_) { /* un file che non si legge viene saltato */ }
+  }
+
+  function onDrop(dt) {
+    // Le voci vanno prese subito: finito l'evento, il browser le invalida
+    const entries = [];
+    const items = dt.items || [];
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].kind !== 'file') continue;
+      const entry = items[i].webkitGetAsEntry ? items[i].webkitGetAsEntry() : null;
+      if (entry) entries.push(entry);
+    }
+    if (!entries.length) {
+      ingest(Array.from(dt.files || [], (file) => ({ file, path: file.name })));
+      return;
+    }
+    (async () => {
+      const out = [];
+      for (const e of entries) await walk(e, out);
+      ingest(out);
+    })();
+  }
+
+  const hasFiles = (e) => Array.from(e.dataTransfer ? e.dataTransfer.types : []).includes('Files');
+  let depth = 0;
+  window.addEventListener('dragenter', (e) => { if (!hasFiles(e)) return; depth++; el.overlay.hidden = false; });
+  window.addEventListener('dragleave', (e) => { if (!hasFiles(e)) return; if (--depth <= 0) { depth = 0; el.overlay.hidden = true; } });
+  window.addEventListener('dragover', (e) => { if (hasFiles(e)) e.preventDefault(); });
+  window.addEventListener('drop', (e) => {
+    if (!hasFiles(e)) return;
+    e.preventDefault();
+    depth = 0;
+    el.overlay.hidden = true;
+    onDrop(e.dataTransfer);
+  });
+
+  el.pickFolder.addEventListener('click', () => el.inFolder.click());
+  el.pickFiles.addEventListener('click', () => el.inFiles.click());
+  el.inFolder.addEventListener('change', () => {
+    const list = Array.from(el.inFolder.files, (file) => ({ file, path: file.webkitRelativePath || file.name }));
+    el.inFolder.value = '';
+    ingest(list);
+  });
+  el.inFiles.addEventListener('change', () => {
+    const list = Array.from(el.inFiles.files, (file) => ({ file, path: file.name }));
+    el.inFiles.value = '';
+    ingest(list);
+  });
+  el.cancel.addEventListener('click', () => { state.cancel = true; });
+  el.clear.addEventListener('click', () => {
+    if (state.busy) return;
+    clearAll();
+    el.notice.hidden = true;
+    refreshMeta();
+    runSearch();
+  });
+
+  // ── Ricerca: comandi ──────────────────────────────────────────────────────
+
+  let timer = 0;
+  el.q.addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(runSearch, 140); });
+  el.q.addEventListener('keydown', (e) => { if (e.key === 'Enter') { clearTimeout(timer); runSearch(); } });
+  el.scope.addEventListener('change', () => { view.scope = el.scope.value; runSearch(); });
+  document.querySelectorAll('[data-sort]').forEach((b) => b.addEventListener('click', () => {
+    view.sort = b.dataset.sort;
+    document.querySelectorAll('[data-sort]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    view.shown = PAGE_SIZE;
+    sortResults();
+    render();
+  }));
+  el.more.addEventListener('click', () => { view.shown += PAGE_SIZE; render(); });
+  window.addEventListener('keydown', (e) => {
+    if (e.key !== '/' || e.ctrlKey || e.metaKey || e.altKey) return;
+    const t = e.target;
+    if (t instanceof HTMLInputElement || t instanceof HTMLTextAreaElement || t instanceof HTMLSelectElement) return;
+    e.preventDefault();
+    el.q.focus();
+    el.q.select();
+  });
+
+  async function copy(text) {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (_) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      const ok = document.execCommand('copy');
+      ta.remove();
+      if (!ok) throw new Error('copia non riuscita');
+    }
+  }
+
+  function flash(btn, text) {
+    if (!btn.dataset.label) btn.dataset.label = btn.textContent;
+    btn.textContent = text;
+    clearTimeout(btn._t);
+    btn._t = setTimeout(() => { btn.textContent = btn.dataset.label; }, 1400);
+  }
+
+  el.results.addEventListener('click', (e) => {
+    const b = e.target.closest('button[data-act]');
+    if (!b) return;
+    const pid = Number(b.dataset.pid);
+    const page = state.pages[pid], f = state.files[page.f];
+    if (b.dataset.act === 'open') {
+      if (!f.url) f.url = URL.createObjectURL(f.file);
+      window.open(`${f.url}#page=${page.n}`, '_blank');
+    } else {
+      const text = `«${plainByPid.get(pid) || ''}» (${f.name}, p. ${page.n})`;
+      copy(text).then(() => flash(b, 'Copiata'), () => flash(b, 'Copia non riuscita'));
+    }
+  });
+  refreshMeta();
+  runSearch();
+})();
+</script>
+</body>
+</html>
