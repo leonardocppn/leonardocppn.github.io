@@ -328,14 +328,14 @@
                 <div class="proj-row">
                     <div class="proj-col">
                         <p>An MCP server that lets an AI assistant read and file your email from the Maildir that mbsync already keeps on your machine. The server reads the folders and the configuration of the mbsync mailbox, without uploading anything on the internet.</p>
-                        <strong>mbsync</strong> keeps a local Maildir copy of your IMAP accounts in sync with the server, and mbsync-mcp works on that copy by exposing the mailbox through
+                        <p><strong>mbsync</strong> keeps a local Maildir copy of your IMAP accounts in sync with the server, and mbsync-mcp works on that copy by exposing the mailbox through
                             the <a href="https://modelcontextprotocol.io/">Model Context
                             Protocol</a>, so that a client like Claude Code can list, read, search
                             and file messages by calling tools.</p>
                         <p>Accounts, hosts and Maildir paths come from the
                             <code>~/.mbsyncrc</code> file you have stored on your computer. The server keeps no configuration of its own and reading your mail doesn't require any password.</p>
-                        <p>As a personal project, this MCP server works only on Linux and macOS.</p>
-                        <p>Source and instructions are available at:<br> <a href="https://github.com/leonardocppn/mbsync-mcp">github.com/leonardocppn/mbsync-mcp</a>.
+                        <p>As a personal project, this MCP server works on Linux and macOS, and on Windows only under WSL.</p>
+                        <p>Source and instructions are available at:<br> <a href="https://github.com/leonardocppn/mbsync-mcp">github.com/leonardocppn/mbsync-mcp</a>.</p>
                     </div>
                     <div class="proj-col">
                         <div class="cc-window">
@@ -358,8 +358,8 @@
                         <b>1.</b> Once the emails are synced to disk, the data stays there and can be consulted offline.<br>
                         <b>2.</b> The searches you can run are more powerful: you can search across several accounts at once, correlating messages far apart in time, drawing directly on their content rather than on their metadata.<br>
                         <b>3.</b> MCP servers expose tools that an AI agent can use. <strong>mbsync-mcp</strong> is a Python script that can be extended at will with any function built for the purpose.</p>
-                        <p>This server is not meant as a replacement for a proper email client: mbsync itself does not send email (that needs a separate SMTP tool, msmtp or similar), and writes have to be propagated back to the IMAP servers. Unless you set up routines to sync periodically, it is not made to work in real time.<br>
-                        It is a powerful way to take proper stock of your mailboxes at specific points in the day.<p>
+                        <p>This server is not meant as a replacement for a proper email client. mbsync itself does not send email (that needs a separate SMTP tool, msmtp or similar), and the read tools work on the copy saved by the last sync. Unless you set up routines to sync periodically, it is not made to work in real time.<br>
+                        It is a powerful way to take proper stock of your mailboxes at specific points in the day.</p>
                 </div>
                 <hr>
 
@@ -372,7 +372,7 @@
                             as long as the client does.</p>
                         <p>Inside, the work splits in two. <b>Reads never touch the network</b>,
                             they walk the Maildir on disk, which is fast and works offline.
-                            <b>Writes go out over IMAP</b> to avoid conflicts. Since moving a message changes the mailbox, the local copy just mirrors the original, and changes must be propagated back to the IMAP servers.</p>
+                            <b>Writes go out over IMAP</b> to avoid conflicts. The Maildir is a mirror of the mailbox on the server, so after each successful write mbsync-mcp runs mbsync for that account to bring the change into the local copy.</p>
                         <p>Besides the tools, the server publishes two MCP resources:
                             <code>mbsync://accounts</code>, and
                             <code>mbsync://account/&lt;name&gt;/folders</code> for each account
@@ -405,7 +405,7 @@
                                 <text x="240" y="32" font-size="13" font-weight="600">MCP client</text>
                                 <text x="240" y="48" font-size="11" fill="#5a6166">Claude Code, or any other</text>
                                 <text x="240" y="134" font-size="13" font-weight="600">server.py</text>
-                                <text x="240" y="150" font-size="11" fill="#5a6166">14 tools, 2 resources</text>
+                                <text x="240" y="150" font-size="11" fill="#5a6166">16 tools, 2 resources</text>
                                 <text x="124" y="235" font-size="13" font-weight="600">Maildir</text>
                                 <text x="124" y="251" font-size="11" fill="#5a6166">~/Mail/&lt;account&gt;</text>
                                 <text x="356" y="235" font-size="13" font-weight="600">IMAP server</text>
@@ -435,25 +435,27 @@
                         <dt>get_email_details</dt><dd>Full body, headers and the list of attachments.</dd>
                         <dt>search_emails</dt><dd>By sender, subject, body, or all three.</dd>
                         <dt>get_inbox_summary</dt><dd>Counts plus the senders you hear from most.</dd>
-                        <dt>daily_briefing</dt><dd>One day of mail, grouped and summarised.</dd>
+                        <dt>daily_briefing</dt><dd>The inbox summary plus the unread messages, optionally only those that arrived from a given day on.</dd>
                     </dl>
-                    <p>Writing mode (these need credentials):</p>
+                    <p>Writing mode (the tools that move messages log in with your IMAP credentials):</p>
                     <dl class="tool-grid">
                         <dt>sync_account</dt><dd>Runs mbsync for one account, with a timeout.</dd>
                         <dt>move_email</dt><dd>Between two folders.</dd>
                         <dt>archive_email</dt><dd>To the account&#8217;s archive folder, found on the server.</dd>
                         <dt>delete_email</dt><dd>To trash, again whatever the provider calls it.</dd>
                         <dt>cleanup_batch</dt><dd>Several deletes and archives over a single connection.</dd>
+                        <dt>list_operations</dt><dd>The latest writes, each with its operation id.</dd>
+                        <dt>undo_operation</dt><dd>Moves the messages of one operation (by default the latest) back where they were.</dd>
                     </dl>
                 </div>
                 <hr>
 
                 <div class="proj-block">
                     <div class="proj-h">Setting it up</div>
-                    <p>Linux or macOS; Python 3.10+; a working mbsync configuration; <code>mcp&gt;=1.0.0</code>;
-                        <code>keyring</code> (only if you want the write tools).</p>
+                    <p>Linux or macOS (on Windows, under WSL); Python 3.10+; a working mbsync configuration; <code>mcp&gt;=1.0.0</code>;
+                        <code>keyring</code> (optional, for storing the IMAP password in the system keyring).</p>
                     <p>Point your client at the server. In Claude Code, that is an entry
-                        in <code>.mcp.json</code>:</p>
+                        in <code>.mcp.json</code>.</p>
                     <div class="proj-code" style="margin-bottom: 10px;">{
                     <span class="c-key">"mcpServers"</span>: {
                         <span class="c-key">"mbsync"</span>: {
@@ -462,8 +464,11 @@
                         }
                     }
                     }</div>
-                    <p>To enable move, archive and delete, store the password once. For Gmail
-                        this is an app password, not your account password:</p>
+                    <p>For the tools that move messages, mbsync-mcp reads the IMAP password from
+                        the system keyring, or runs the account&#8217;s <code>PassCmd</code> from
+                        <code>~/.mbsyncrc</code> when the keyring has no entry for the account.
+                        To store the password in the keyring, run this once (for Gmail, use an
+                        <a href="https://support.google.com/accounts/answer/185833">app password</a>).</p>
                     <div class="proj-code" style="margin-bottom: 10px;">python -c <span class="c-ok">"import keyring; keyring.set_password('mbsync-mcp', 'email@gmail.com', 'app-password')"</span></div>
                     <p>Source and instructions:
                         <a href="https://github.com/leonardocppn/mbsync-mcp">github.com/leonardocppn/mbsync-mcp</a>
@@ -552,13 +557,13 @@
 
                 await tool('mbsync - daily_briefing',
                     'account: "email@gmail.com", date: "yesterday", auto_sync: true',
-                    '<span class="cc-ok">\u2705 Sync gmail completed</span> \u00b7 18 messages, 11 unread\n' +
-                    '     Top senders: LinkedIn (7), Substack (3), GitHub (2)\n' +
-                    '     <span class="cc-dim">\u2026 +14 lines (ctrl+r to expand)</span>', id);
+                    'Briefing - email@gmail.com\n' +
+                    '     INBOX: 1243 total emails, 18 unread\n' +
+                    '     <span class="cc-dim">\u2026 +102 lines (ctrl+r to expand)</span>', id);
                 if (id !== run) return;
 
                 await tool('mbsync - get_email_details',
-                    'account: "email@gmail.com", folder: "INBOX", index: 6',
+                    'account: "email@gmail.com", folder: "INBOX", id: 4127',
                     'From: Anthropic &lt;headquarters@anthropic.com&gt;\n' +
                     '     Subject: Application for Anthropic CEO - next step\n' +
                     '     <span class="cc-dim">\u2026 +12 lines (ctrl+r to expand)</span>', id);
