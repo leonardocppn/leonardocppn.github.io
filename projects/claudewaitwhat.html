@@ -403,10 +403,10 @@
                 </div>
 
                 <div class="proj-block">
-                    <p>Select a passage in a Claude Code session, press a key, and a second Claude opens beside it to discuss that passage, without interrupting the first one&#8217;s work.</p>
-                    <p>Long answers often hold one point worth stopping on: a term you don&#8217;t know, a step of a plan whose reasons aren&#8217;t clear. Asking about it in the same session pulls the work off course. With <strong>claude-wait-what</strong> the question goes to a side instance that already knows which passage you mean, which message it comes from and what you had asked, while the main session keeps going.</p>
-                    <p>It works with <b>Kitty</b>, <b>Konsole</b> and <b>tmux</b>, and with any other terminal through a desktop shortcut. It is written in Python, with no dependencies.</p>
-                    <p>Source and instructions are available at:<br> <a href="https://github.com/leonardocppn/claude-wait-what">github.com/leonardocppn/claude-wait-what</a>.</p>
+                    <p>Select a passage in a Claude Code session, press a key, and a second Claude opens beside it to discuss that passage while the first one goes on with its work.</p>
+                    <p>A long answer may contain a term you don&#8217;t know, or a step of a plan whose reasons aren&#8217;t clear. If you ask about it in the same session, the question and its answer enter that conversation and the task in progress stops until the answer is written. With claude-wait-what the question goes to a side instance, which receives the passage together with the message it comes from and the two before it, while the main session goes on with its task.</p>
+                    <p>It works with Kitty, Konsole and tmux, and with any other terminal through a desktop shortcut. It is written in Python and has no external dependencies.</p>
+                    <p>Source and instructions are on GitHub, at<br> <a href="https://github.com/leonardocppn/claude-wait-what">github.com/leonardocppn/claude-wait-what</a>.</p>
                 </div>
                 <hr>
 
@@ -415,13 +415,13 @@
                     <div class="proj-col">
                         <div class="proj-h">How it works</div>
                         <p><b>The hook.</b> When a Claude Code session starts, a <code>SessionStart</code> hook records which terminal pane it runs in and the path of its session file.</p>
-                        <p><b>The trigger.</b> You select a passage and press the key. The adapter for your terminal reads the selection and knows which pane it came from, so the session is known, not guessed.</p>
-                        <p><b>The source.</b> The passage is located in the session file. On screen the text is rendered (wrapped lines, bullets, no markdown symbols), in the file it is raw markdown: both are reduced to letters and digits before comparing, so they match.</p>
-                        <p><b>The side instance.</b> A new Claude Code instance opens next to the first, in the same project. It receives the passage, the message it comes from and the two before it, and the whole conversation as plain text, to read only if needed. It cannot edit files, and it sizes its answer to the question: a few lines for &#8220;what does this term mean?&#8221;, more context for &#8220;why this choice?&#8221;.</p>
+                        <p><b>The trigger.</b> You select a passage and press the key. The adapter for your terminal reads the selection together with the id of the pane it came from, and the hook has already recorded which session file belongs to that pane.</p>
+                        <p><b>The source.</b> The passage is located in the session file. The file holds the raw markdown of each message, and the screen shows it rendered, with wrapped lines and bullets and without markdown symbols. Both texts are reduced to letters and digits before the comparison.</p>
+                        <p><b>The side instance.</b> A new Claude Code instance opens next to the first, in the same project. It receives the passage, the message it comes from and the two before it, plus the path of the whole conversation as plain text, which it opens when the question requires it. Its file editing tools are disabled, and its instructions ask it to match the length of the answer to the question, so a question about what a term means gets a few lines.</p>
                     </div>
                     <div class="proj-col" style="max-width:462px;">
                         <svg viewBox="0 0 480 290" width="100%" role="img"
-                             aria-label="Diagram: a Claude Code session in a terminal pane is recorded by a SessionStart hook in a registry; the terminal adapter passes the selection and the pane to the core, which looks up the session file, finds the source message and starts a side Claude Code instance.">
+                             aria-label="Diagram. A Claude Code session in a terminal pane is recorded by a SessionStart hook in a registry; the terminal adapter passes the selection and the pane to the core, which looks up the session file, finds the source message and starts a side Claude Code instance.">
                             <defs>
                                 <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5"
                                         markerWidth="6" markerHeight="6" orient="auto-start-reverse">
@@ -474,19 +474,19 @@
                 <div class="proj-block">
                     <div class="proj-h">Terminals</div>
                     <dl class="tool-grid">
-                        <dt>Kitty</dt><dd>Select, then <code>Ctrl+A</code>. Side instances open as tabs of a separate window, with the colors of the pane they come from. Without a selection, <code>Ctrl+A</code> keeps its usual job.</dd>
-                        <dt>Konsole</dt><dd>Select, then a desktop shortcut. A new tab in the same window, through a dedicated profile: since version 26 Konsole does not let other programs type into its tabs.</dd>
+                        <dt>Kitty</dt><dd>Select, then <code>Ctrl+A</code>. Side instances open as tabs of a separate window, with the colors of the pane they come from. Without a selection, <code>Ctrl+A</code> moves the cursor to the beginning of the line as usual.</dd>
+                        <dt>Konsole</dt><dd>Select, then a desktop shortcut. The side instance opens in a new tab of the same window through a dedicated profile, because since version 26 Konsole no longer accepts text sent to its tabs by other programs.</dd>
                         <dt>tmux</dt><dd><code>Ctrl+A</code> in copy mode, or <code>prefix a</code> after a mouse selection. A new tmux window.</dd>
                         <dt>any other</dt><dd>A desktop shortcut that reads the primary selection and opens a window of your default terminal. The session is found by searching the passage among the recent ones.</dd>
                     </dl>
-                    <p style="margin-top:0.8rem;">The core does not depend on the terminal: an adapter only supplies the key, the pane it was pressed in and a place to open the instance. Adding a terminal means writing only that part.</p>
+                    <p style="margin-top:0.8rem;">The code specific to each terminal sits in its adapter and in the function that reads the pane id from the environment. An adapter supplies the selected text, the pane where the key was pressed and a place to open the instance, so adding a terminal means writing an adapter and adding a branch to that function.</p>
                 </div>
                 <hr>
 
 
                 <div class="proj-block">
                     <div class="proj-h">Setting it up</div>
-                    <p>Linux; Python 3.10+; Claude Code. The hook goes in <code>~/.claude/settings.json</code>:</p>
+                    <p>It requires Linux, Python 3.10+ and Claude Code. The hook goes in <code>~/.claude/settings.json</code>.</p>
                     <div class="proj-code" style="margin-bottom: 10px;">{
   <span class="c-key">"hooks"</span>: {
     <span class="c-key">"SessionStart"</span>: [
@@ -495,9 +495,9 @@
     ]
   }
 }</div>
-                    <p>Then the key for your terminal. In Kitty it is one line of <code>kitty.conf</code>:</p>
+                    <p>Then you bind the key in your terminal. In Kitty it takes one line of <code>kitty.conf</code>.</p>
                     <div class="proj-code" style="margin-bottom: 10px;">map ctrl+a kitten /path/to/claude-wait-what/adapters/kitty/wait_what_kitty.py pass-ctrl-a</div>
-                    <p>Konsole, tmux and the desktop shortcut each take one command; the details are in the README:
+                    <p>Konsole, tmux and the desktop shortcut each take one command, described in the README at
                         <a href="https://github.com/leonardocppn/claude-wait-what">github.com/leonardocppn/claude-wait-what</a>
                         (MIT licence). Unofficial project, not affiliated with Anthropic.</p>
                 </div>
